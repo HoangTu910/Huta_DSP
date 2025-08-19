@@ -8,7 +8,7 @@
 
 const int Q15_PI = 102944;
 
-class Filter { 
+class IFilter { 
 public:
     virtual int process(int input) = 0;
     virtual void process(std::vector<double> &inputSignal, std::vector<int> &outputSignal) = 0;

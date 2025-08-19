@@ -1,7 +1,7 @@
 #include "../../includes/module/Signal.hpp"
 #include "../../includes/module/CanonicalFilter.hpp"
 
-void generateTestSignal(std::vector<double> &signal, int samp_freq, int duration, int amplitude)
+void Signal::generateTestSignal(std::vector<double> &signal, int samp_freq, int duration, int amplitude)
 {
     for (int i = 0; i < samp_freq * duration; ++i) {
         double time = static_cast<double>(i) / samp_freq;

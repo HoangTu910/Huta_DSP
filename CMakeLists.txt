@@ -14,9 +14,9 @@ include_directories(${CMAKE_SOURCE_DIR}/includes)
 set(SOURCES
     src/main.cpp
     src/module/CanonicalFilter.cpp
-    src/module/Filter.cpp
+    src/interface/IFilter.cpp
     src/module/Signal.cpp
-    src/q15/q15.cpp  
+    src/dsp_math/QNumber.cpp  
 )
 
 # Tạo executable
