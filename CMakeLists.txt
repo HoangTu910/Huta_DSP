@@ -17,6 +17,7 @@ set(SOURCES
     src/interface/IFilter.cpp
     src/module/Signal.cpp
     src/dsp_math/QNumber.cpp  
+    src/module/StateVariableFilter.cpp
 )
 
 # Tạo executable

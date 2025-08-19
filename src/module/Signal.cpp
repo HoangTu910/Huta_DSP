@@ -14,10 +14,10 @@ void Signal::generateTestSignal(std::vector<double> &signal, int samp_freq, int 
 
 void Signal::writeMixedSignal()
 {
-    std::ofstream outFile("mixedSignal.txt");
+    std::ofstream outFile("inputSignal.txt");
     if (outFile.is_open()) {
-        for (size_t i = 0; i < this->mixedSignal.size(); ++i) {
-            outFile << i / static_cast<double>(m_sampFreq) << " " << this->mixedSignal[i] << "\n";
+        for (size_t i = 0; i < this->t_inputSignal.size(); ++i) {
+            outFile << i / static_cast<double>(m_sampFreq) << " " << this->t_inputSignal[i] << "\n";
         }
         outFile.close();
         std::cout << "Write done mixedSignal.txt" << std::endl;
@@ -30,8 +30,8 @@ void Signal::writeFilteredSignal()
 {
     std::ofstream outFile("filteredSignal.txt");
     if (outFile.is_open()) {
-        for (size_t i = 0; i < this->filteredSignal.size(); ++i) {
-            outFile << i / static_cast<double>(m_sampFreq) << " " << this->filteredSignal[i] << "\n";
+        for (size_t i = 0; i < this->t_inputSignal.size(); ++i) {
+            outFile << i / static_cast<double>(m_sampFreq) << " " << this->t_inputSignal[i] << "\n";
         }
         outFile.close();
         std::cout << "Write done filteredSignal.txt" << std::endl;
@@ -39,3 +39,5 @@ void Signal::writeFilteredSignal()
         std::cout << "Error!" << std::endl;
     }
 }
+
+

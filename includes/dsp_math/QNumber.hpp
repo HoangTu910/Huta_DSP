@@ -1,10 +1,14 @@
-#ifndef _Q15_H_
-#define _Q15_H_
+#ifndef _QNUMBER_H_
+#define _QNUMBER_H_
+
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
 
 #include<cmath>
 #include<climits>
 #include<vector>
-#include"../common/debug.h"
+#include"../common/debug.hpp"
 
 /*
     Currently using Q17.14 format with the range from [-65536, 65535]
@@ -13,10 +17,15 @@
 const int Q_BITS = 14;
 const int Q_SCALE = 1 << Q_BITS;
 const int TAN_TABLE_SIZE = 1024;
+const int SIN_TABLE_SIZE = 1024;
+
 extern std::vector<int> tan_lookup_table;
+extern std::vector<int> sin_lookup_table;
 
 void initialize_tan_table();
+void initialize_sin_table();
 int q17_14_tan_from_table(double angle_rad);
+int q17_14_sin_from_table(double angle_rad);
 
 namespace DSP_MATH{
     int q17_14_add(int a, int b);
@@ -28,6 +37,7 @@ namespace DSP_MATH{
     int int_to_q17_14(int x);
     int q17_14_to_int(int q);
     int q17_14_tan(int q_input);
+    int q17_14_sin(int q_input);
 
     template<typename T>
     std::vector<int> preprocessQNumber(const std::vector<T>& inputSignal) {

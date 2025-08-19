@@ -3,17 +3,17 @@
 void Filter::CanonicalFilter::setType(int type, int fc, double Q)
 {
     int fc_q = DSP_MATH::int_to_q17_14(fc);
-    debug(fc_q);
+    hu_debug(fc_q);
     int pi_q = DSP_MATH::float_to_q17_14(M_PI);
-    debug(pi_q);
+    hu_debug(pi_q);
     int Q_q = DSP_MATH::float_to_q17_14(Q);
-    debug(Q_q);
+    hu_debug(Q_q);
     int pi_fc = DSP_MATH::q17_14_multiply(pi_q, fc_q);
-    debug(pi_fc);
+    hu_debug(pi_fc);
     int div = DSP_MATH::q17_14_divide(pi_fc, m_fs);
-    debug(div);
+    hu_debug(div);
     int m_K_q = DSP_MATH::q17_14_tan(div);
-    debug(m_K_q);
+    hu_debug(m_K_q);
     int K_square_q = DSP_MATH::q17_14_multiply(m_K_q, m_K_q);
 
     switch (type)
