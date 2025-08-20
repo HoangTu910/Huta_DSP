@@ -38,6 +38,9 @@ namespace DSP_MATH{
     int q17_14_to_int(int q);
     int q17_14_tan(int q_input);
     int q17_14_sin(int q_input);
+    int q17_14_square(int q_input);
+    int q17_14_sqrt(int q_input);
+    int q17_14_pow(int q_base, int q_exp);
 
     template<typename T>
     std::vector<int> preprocessQNumber(const std::vector<T>& inputSignal) {

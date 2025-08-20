@@ -9,12 +9,18 @@
 #include <numeric>
 #include <cmath>
 #include <fstream>
+#include <iostream>
+
+const int MAX_TEST_SIGNALS = 10;
 
 class Signal {
 public:
     Signal(int samp_freq, int duration, int amplitude) 
-        : m_sampFreq(samp_freq), m_duration(duration), m_amplitude(amplitude) {
-
+        : m_sampFreq(samp_freq),
+          m_duration(duration),
+          m_amplitude(amplitude),
+          t_outputSignal(MAX_TEST_SIGNALS) 
+    {
         for (int i = 0; i < samp_freq * duration; ++i) {
             double time = static_cast<double>(i) / samp_freq;
             double mixed_signal = amplitude * sin(2 * M_PI * 100 * time);
@@ -25,18 +31,12 @@ public:
             t_inputSignal.push_back(mixed_signal);
         }
     }
-    void generateTestSignal(std::vector<double> &signal, int samp_freq, int duration, int amplitude);
-    
-    /*I created many buffer for testing, can be removed to reduce memory used*/
-    std::vector<double> t_inputSignal;
-    std::vector<int> t_outputSignal_1;
-    std::vector<int> t_outputSignal_2;
-    std::vector<int> t_outputSignal_3;
-    std::vector<int> t_outputSignal_4;
-    std::vector<int> t_outputSignal_5;
 
-    void writeMixedSignal();
-    void writeFilteredSignal();
+    void generateTestSignal(std::vector<double> &signal, int samp_freq, int duration, int amplitude);
+
+    std::vector<double> t_inputSignal;
+    std::vector<std::vector<int>> t_outputSignal;  
+
     template<typename TT>
     void writeSignal(const std::vector<TT> &signal, const std::string &filename) {
         std::ofstream outFile(filename);
@@ -50,10 +50,14 @@ public:
             std::cout << "Error writing to " << filename << std::endl;
         }
     }
+
 private:
     int m_sampFreq;
     int m_duration;
     int m_amplitude;
+
+    void writeMixedSignal();
+    void writeFilteredSignal();
 };
 
 #endif

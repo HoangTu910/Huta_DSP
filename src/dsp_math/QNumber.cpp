@@ -187,5 +187,28 @@ int DSP_MATH::q17_14_sin(int q_input) {
     return negative ? -result : result;
 }
 
+int DSP_MATH::q17_14_square(int q_input)
+{
+    return q17_14_multiply(q_input, q_input);
+}
 
+int DSP_MATH::q17_14_sqrt(int q_input)
+{
+    if (q_input < 0) {
+        return INT_MIN; 
+    }
+    double float_value = q17_14_to_float(q_input);
+    double sqrt_value = sqrt(float_value);
+    return float_to_q17_14(sqrt_value);
+}
 
+int DSP_MATH::q17_14_pow(int q_base, int q_exp) {
+    double base_float = q17_14_to_float(q_base);
+    double exp_float = q17_14_to_float(q_exp);
+
+    double result_float = pow(base_float, exp_float);
+
+    int result_q = float_to_q17_14(result_float);
+
+    return result_q;
+}

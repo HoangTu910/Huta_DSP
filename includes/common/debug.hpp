@@ -35,5 +35,6 @@ namespace Debug {
 #define hu_debug(x) Debug::printVar(#x, (x), __FILE__, __LINE__, __func__)
 #define hu_debug2(x,y) Debug::printVar2(#x, (x), #y, (y), __FILE__, __LINE__, __func__)
 #define hu_debugVec(v) Debug::printVec(#v, (v), __FILE__, __LINE__, __func__)
+#define hu_alert(msg) std::cerr << "[" << __FILE__ << ":" << __LINE__ << " in " << __func__ << "] " << msg << std::endl
 
 #endif

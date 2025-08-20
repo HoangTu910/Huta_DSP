@@ -15,9 +15,10 @@ set(SOURCES
     src/main.cpp
     src/module/CanonicalFilter.cpp
     src/interface/IFilter.cpp
-    src/module/Signal.cpp
+    src/test/Signal.cpp
     src/dsp_math/QNumber.cpp  
     src/module/StateVariableFilter.cpp
+    src/module/ShelvingFilter.cpp
 )
 
 # Tạo executable

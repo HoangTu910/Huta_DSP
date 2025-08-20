@@ -16,6 +16,10 @@ void Filter::CanonicalFilter::setType(int type, int fc, double Q)
     hu_debug(m_K_q);
     int K_square_q = DSP_MATH::q17_14_multiply(m_K_q, m_K_q);
 
+    /*
+        All the formulas was used from DAFX-Digital Audio Effects book - Chapter 2
+    */
+
     switch (type)
     {
     case LOW_PASS_1:
@@ -43,17 +47,12 @@ void Filter::CanonicalFilter::setType(int type, int fc, double Q)
     {
         int K2_Q_q = DSP_MATH::q17_14_multiply(K_square_q, Q_q);
         int det_q = DSP_MATH::q17_14_add(DSP_MATH::q17_14_add(K2_Q_q, m_K_q), Q_q);
-        
         m_b0 = DSP_MATH::q17_14_divide(K2_Q_q, det_q);
-        
         int nom_b1 = DSP_MATH::q17_14_multiply(DSP_MATH::float_to_q17_14(2.0), K2_Q_q);
         m_b1 = DSP_MATH::q17_14_divide(nom_b1, det_q);
-
         m_b2 = m_b0;
-        
         int nom_a1 = DSP_MATH::q17_14_multiply(DSP_MATH::float_to_q17_14(2.0), DSP_MATH::q17_14_multiply(Q_q, DSP_MATH::q17_14_subtract(K_square_q, DSP_MATH::float_to_q17_14(1.0))));
         m_a1 = DSP_MATH::q17_14_divide(nom_a1, det_q);
-        
         int nom_a2 = DSP_MATH::q17_14_add(DSP_MATH::q17_14_subtract(K2_Q_q, m_K_q), Q_q);
         m_a2 = DSP_MATH::q17_14_divide(nom_a2, det_q);
     }
@@ -63,14 +62,11 @@ void Filter::CanonicalFilter::setType(int type, int fc, double Q)
     {
         int K2_Q_q = DSP_MATH::q17_14_multiply(K_square_q, Q_q);
         int det_q = DSP_MATH::q17_14_add(DSP_MATH::q17_14_add(K2_Q_q, m_K_q), Q_q);
-        
         m_b0 = DSP_MATH::q17_14_divide(Q_q, det_q);
         m_b1 = DSP_MATH::q17_14_divide(DSP_MATH::q17_14_multiply(DSP_MATH::float_to_q17_14(-2.0), Q_q), det_q);
         m_b2 = m_b0; 
-
         int nom_a1 = DSP_MATH::q17_14_multiply(DSP_MATH::float_to_q17_14(2.0), DSP_MATH::q17_14_multiply(Q_q, DSP_MATH::q17_14_subtract(K_square_q, DSP_MATH::float_to_q17_14(1.0))));
         m_a1 = DSP_MATH::q17_14_divide(nom_a1, det_q);
-        
         int nom_a2 = DSP_MATH::q17_14_add(DSP_MATH::q17_14_subtract(K2_Q_q, m_K_q), Q_q);
         m_a2 = DSP_MATH::q17_14_divide(nom_a2, det_q);
     }
@@ -78,14 +74,11 @@ void Filter::CanonicalFilter::setType(int type, int fc, double Q)
     case BAND_PASS_2:
     {
         int det_q = DSP_MATH::q17_14_add(DSP_MATH::q17_14_add(DSP_MATH::q17_14_multiply(K_square_q, Q_q), m_K_q), Q_q);
-        
         m_b0 = DSP_MATH::q17_14_divide(m_K_q, det_q);
         m_b1 = DSP_MATH::float_to_q17_14(0.0);
         m_b2 = DSP_MATH::q17_14_multiply(m_b0, DSP_MATH::float_to_q17_14(-1.0));
-
         int nom_a1 = DSP_MATH::q17_14_multiply(DSP_MATH::float_to_q17_14(2.0), DSP_MATH::q17_14_multiply(Q_q, DSP_MATH::q17_14_subtract(K_square_q, DSP_MATH::float_to_q17_14(1.0))));
         m_a1 = DSP_MATH::q17_14_divide(nom_a1, det_q);
-
         int nom_a2 = DSP_MATH::q17_14_add(DSP_MATH::q17_14_subtract(DSP_MATH::q17_14_multiply(K_square_q, Q_q), m_K_q), Q_q);
         m_a2 = DSP_MATH::q17_14_divide(nom_a2, det_q);
     }
@@ -94,18 +87,13 @@ void Filter::CanonicalFilter::setType(int type, int fc, double Q)
     case BAND_REJECT_2:
     {
         int det_q = DSP_MATH::q17_14_add(DSP_MATH::q17_14_add(DSP_MATH::q17_14_multiply(K_square_q, Q_q), m_K_q), Q_q);
-        
         int nom_b0 = DSP_MATH::q17_14_multiply(Q_q, DSP_MATH::q17_14_add(DSP_MATH::float_to_q17_14(1.0), K_square_q));
         m_b0 = DSP_MATH::q17_14_divide(nom_b0, det_q);
-
         m_b1 = DSP_MATH::q17_14_multiply(DSP_MATH::q17_14_multiply(DSP_MATH::float_to_q17_14(2.0), Q_q), DSP_MATH::q17_14_subtract(K_square_q, DSP_MATH::float_to_q17_14(1.0)));
         m_b1 = DSP_MATH::q17_14_divide(m_b1, det_q);
-
         m_b2 = m_b0;
-
         int nom_a1 = DSP_MATH::q17_14_multiply(DSP_MATH::q17_14_multiply(DSP_MATH::float_to_q17_14(2.0), Q_q), DSP_MATH::q17_14_subtract(K_square_q, DSP_MATH::float_to_q17_14(1.0)));
         m_a1 = DSP_MATH::q17_14_divide(nom_a1, det_q);
-
         int nom_a2 = DSP_MATH::q17_14_add(DSP_MATH::q17_14_subtract(DSP_MATH::q17_14_multiply(K_square_q, Q_q), m_K_q), Q_q);
         m_a2 = DSP_MATH::q17_14_divide(nom_a2, det_q);
     }
@@ -114,18 +102,13 @@ void Filter::CanonicalFilter::setType(int type, int fc, double Q)
     case ALL_PASS_2:
     {
         int det_q = DSP_MATH::q17_14_add(DSP_MATH::q17_14_add(DSP_MATH::q17_14_multiply(K_square_q, Q_q), m_K_q), Q_q);
-
         int nom_b0 = DSP_MATH::q17_14_add(DSP_MATH::q17_14_subtract(DSP_MATH::q17_14_multiply(K_square_q, Q_q), m_K_q), Q_q);
         m_b0 = DSP_MATH::q17_14_divide(nom_b0, det_q);
-
         int nom_b1 = DSP_MATH::q17_14_multiply(DSP_MATH::q17_14_multiply(DSP_MATH::float_to_q17_14(2.0), Q_q), DSP_MATH::q17_14_subtract(K_square_q, DSP_MATH::float_to_q17_14(1.0)));
         m_b1 = DSP_MATH::q17_14_divide(nom_b1, det_q);
-
         m_b2 = DSP_MATH::float_to_q17_14(1.0);
-
         int nom_a1 = DSP_MATH::q17_14_multiply(DSP_MATH::q17_14_multiply(DSP_MATH::float_to_q17_14(2.0), Q_q), DSP_MATH::q17_14_subtract(K_square_q, DSP_MATH::float_to_q17_14(1.0)));
         m_a1 = DSP_MATH::q17_14_divide(nom_a1, det_q);
-
         int nom_a2 = DSP_MATH::q17_14_add(DSP_MATH::q17_14_subtract(DSP_MATH::q17_14_multiply(K_square_q, Q_q), m_K_q), Q_q);
         m_a2 = DSP_MATH::q17_14_divide(nom_a2, det_q);
     }
