@@ -1,1 +1,3 @@
 build/
+visualize/venv
+vis.sh
