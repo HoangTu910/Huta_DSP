@@ -3,47 +3,68 @@
 std::vector<int> tan_lookup_table(TAN_TABLE_SIZE);
 std::vector<int> sin_lookup_table(SIN_TABLE_SIZE);
 
-int DSP_MATH::q17_14_add(int a, int b)
+int DSP_MATH::q1_15_add(int a, int b)
 {
-    return a + b;
+    long long result = static_cast<long long>(a) + static_cast<long long>(b);
+    if (result > SATURATION_LIMIT_UPPER) return SATURATION_LIMIT_UPPER;
+    if (result < SATURATION_LIMIT_LOWER) return SATURATION_LIMIT_LOWER;
+    return static_cast<int>(result);
 }
 
-int DSP_MATH::q17_14_subtract(int a, int b)
+int DSP_MATH::q1_15_subtract(int a, int b)
 {
-    return a - b;
+    long long result = static_cast<long long>(a) - static_cast<long long>(b);
+    if (result > SATURATION_LIMIT_UPPER) return SATURATION_LIMIT_UPPER;
+    if (result < SATURATION_LIMIT_LOWER) return SATURATION_LIMIT_LOWER;
+    return static_cast<int>(result);
 }
 
-int DSP_MATH::q17_14_multiply(int a, int b)
+int DSP_MATH::q1_15_multiply(int a, int b)
 {
     long long result = static_cast<long long>(a) * static_cast<long long>(b);
-    return static_cast<int>((result + (Q_SCALE >> 1)) >> Q_BITS);
+    result = (result + (Q_SCALE >> 1)) >> Q_BITS;
+    if (result > SATURATION_LIMIT_UPPER) return SATURATION_LIMIT_UPPER;
+    if (result < SATURATION_LIMIT_LOWER) return SATURATION_LIMIT_LOWER;
+    return static_cast<int>(result);
 }
 
-int DSP_MATH::q17_14_divide(int a, int b)
+int DSP_MATH::q1_15_divide(int a, int b)
 {
     if (b == 0) {
-        return INT_MAX; 
+        return (a >= 0) ? SATURATION_LIMIT_UPPER : SATURATION_LIMIT_LOWER;
     }
     long long result = static_cast<long long>(a) * Q_SCALE;
-    return static_cast<int>(result / b);
+    result /= b;
+    if (result > SATURATION_LIMIT_UPPER) return SATURATION_LIMIT_UPPER;
+    if (result < SATURATION_LIMIT_LOWER) return SATURATION_LIMIT_LOWER;
+    return static_cast<int>(result);
 }
 
-int DSP_MATH::float_to_q17_14(double x)
+int DSP_MATH::float_to_q1_15(double x)
 {
-    return static_cast<int>(round(x * Q_SCALE));
+    long long result = static_cast<long long>(round(x * Q_SCALE));
+    if (result > SATURATION_LIMIT_UPPER) return SATURATION_LIMIT_UPPER;
+    if (result < SATURATION_LIMIT_LOWER) return SATURATION_LIMIT_LOWER;
+    return static_cast<int>(result);
 }
 
-double DSP_MATH::q17_14_to_float(int q)
+double DSP_MATH::q1_15_to_float(int q)
 {
     return static_cast<double>(q) / Q_SCALE;
 }
 
-int DSP_MATH::int_to_q17_14(int x) {
-    return static_cast<int>(round(static_cast<double>(x) * Q_SCALE));
+int DSP_MATH::int_to_q1_15(int x) {
+    long long result = static_cast<long long>(round(static_cast<double>(x) * Q_SCALE));
+    if (result > SATURATION_LIMIT_UPPER) return SATURATION_LIMIT_UPPER;
+    if (result < SATURATION_LIMIT_LOWER) return SATURATION_LIMIT_LOWER;
+    return static_cast<int>(result);
 }
 
-int DSP_MATH::q17_14_to_int(int q) {
-    return static_cast<int>(round(static_cast<double>(q) / Q_SCALE));
+int DSP_MATH::q1_15_to_int(int q) {
+    long long result = static_cast<long long>(round(static_cast<double>(q) / Q_SCALE));
+    if (result > SATURATION_LIMIT_UPPER) return SATURATION_LIMIT_UPPER;
+    if (result < SATURATION_LIMIT_LOWER) return SATURATION_LIMIT_LOWER;
+    return static_cast<int>(result);
 }
 
 void initialize_tan_table() {
@@ -60,8 +81,7 @@ void initialize_sin_table() {
     }
 }
 
-int32_t q17_14_tan_from_table(double angle_rad) {
-    hu_debug(angle_rad);
+int32_t q1_15_tan_from_table(double angle_rad) {
     initialize_tan_table();
     if (angle_rad < 0) angle_rad = 0;
     if (angle_rad > M_PI / 4.0) angle_rad = M_PI / 4.0;
@@ -77,15 +97,13 @@ int32_t q17_14_tan_from_table(double angle_rad) {
 
     double value_low = static_cast<double>(tan_lookup_table[index_low]);
     double value_high = static_cast<double>(tan_lookup_table[index_high]);
-    hu_debug(tan_lookup_table[index_low]);
 
     return static_cast<int32_t>(round(value_low + fraction * (value_high - value_low)));
 }
 
 
-int DSP_MATH::q17_14_tan(int q_input) {
+int DSP_MATH::q1_15_tan(int q_input) {
     double angle = static_cast<double>(q_input) / Q_SCALE;
-    hu_debug(angle);
     angle = fmod(angle, 2 * M_PI);
     if (angle > M_PI) {
         angle -= 2 * M_PI;
@@ -106,23 +124,21 @@ int DSP_MATH::q17_14_tan(int q_input) {
 
     int result;
     if (angle <= M_PI / 4.0) {
-        result = q17_14_tan_from_table(angle);
-        hu_debug(result);
+        result = q1_15_tan_from_table(angle);
     } else {
         double reduced_angle = M_PI / 2.0 - angle;
-        int tan_reduced = q17_14_tan_from_table(reduced_angle);
+        int tan_reduced = q1_15_tan_from_table(reduced_angle);
         if (tan_reduced == 0) {
             return negative ? INT_MIN : INT_MAX;
         }
-        result = q17_14_divide(float_to_q17_14(1.0), tan_reduced);
+        result = q1_15_divide(float_to_q1_15(1.0), tan_reduced);
     }
     
     return negative ? -result : result;
 }
 
-int q17_14_sin_from_table(double angle_rad) {
+int q1_15_sin_from_table(double angle_rad) {
     initialize_sin_table();
-    hu_debug(angle_rad);
     if (angle_rad < 0 || angle_rad > M_PI / 2.0) {
         return 0; 
     }
@@ -146,14 +162,14 @@ int q17_14_sin_from_table(double angle_rad) {
 }
 
 /**
- * @brief Tính giá trị sin của một góc ở định dạng Q17.14.
+ * @brief Tính giá trị sin của một góc ở định dạng Q1.15.
  * * Hàm này xử lý các góc trong phạm vi [-∞, +∞] bằng cách chuẩn hóa
  * và sử dụng tính chất đối xứng của hàm sin để tra cứu bảng.
- * * @param q_input Góc đầu vào ở định dạng Q17.14.
- * @return Giá trị sin tương ứng ở định dạng Q17.14.
+ * * @param q_input Góc đầu vào ở định dạng Q1.15.
+ * @return Giá trị sin tương ứng ở định dạng Q1.15.
  */
-int DSP_MATH::q17_14_sin(int q_input) {
-    // 1. Chuyển input Q17.14 sang số thực
+int DSP_MATH::q1_15_sin(int q_input) {
+    // 1. Chuyển input Q1.15 sang số thực
     double angle = static_cast<double>(q_input) / Q_SCALE;
 
     // 2. Chuẩn hóa góc về phạm vi [0, 2π)
@@ -181,34 +197,34 @@ int DSP_MATH::q17_14_sin(int q_input) {
     }
     
     // 4. Tra cứu giá trị từ bảng
-    int result = q17_14_sin_from_table(reduced_angle);
+    int result = q1_15_sin_from_table(reduced_angle);
     
     // 5. Điều chỉnh dấu dựa trên góc phần tư ban đầu
     return negative ? -result : result;
 }
 
-int DSP_MATH::q17_14_square(int q_input)
+int DSP_MATH::q1_15_square(int q_input)
 {
-    return q17_14_multiply(q_input, q_input);
+    return q1_15_multiply(q_input, q_input);
 }
 
-int DSP_MATH::q17_14_sqrt(int q_input)
+int DSP_MATH::q1_15_sqrt(int q_input)
 {
     if (q_input < 0) {
         return INT_MIN; 
     }
-    double float_value = q17_14_to_float(q_input);
+    double float_value = q1_15_to_float(q_input);
     double sqrt_value = sqrt(float_value);
-    return float_to_q17_14(sqrt_value);
+    return float_to_q1_15(sqrt_value);
 }
 
-int DSP_MATH::q17_14_pow(int q_base, int q_exp) {
-    double base_float = q17_14_to_float(q_base);
-    double exp_float = q17_14_to_float(q_exp);
+int DSP_MATH::q1_15_pow(int q_base, int q_exp) {
+    double base_float = q1_15_to_float(q_base);
+    double exp_float = q1_15_to_float(q_exp);
 
     double result_float = pow(base_float, exp_float);
 
-    int result_q = float_to_q17_14(result_float);
+    int result_q = float_to_q1_15(result_float);
 
     return result_q;
 }

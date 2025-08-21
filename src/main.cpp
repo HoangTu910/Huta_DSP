@@ -16,11 +16,11 @@ using namespace std;
 
 /* Some parameter */
 const int SAMP_FREQ = 3000; 
-const int CUTOFF_FREQ = 200;
-const int CENTER_FREQ = 200;
+const int CUTOFF_FREQ = 100;
+const int CENTER_FREQ = 800;
 const double Q_FACTOR = 0.707;
 const int SIGNAL_DURATION = 1;
-const int SIGNAL_AMPLITUDE = 1;
+const double SIGNAL_AMPLITUDE = 0.06;
 const double GAIN_FACTOR = 20.0; // dB
 /* Some parameter */
 
@@ -41,7 +41,7 @@ int main() {
     /* Canonical testing */
     unique_ptr<Filter::CanonicalFilter> canonicalFilter(new Filter::CanonicalFilter(SAMP_FREQ));
 
-    canonicalFilter->setType(LOW_PASS_2, CENTER_FREQ, Q_FACTOR);
+    canonicalFilter->setType(LOW_PASS_2, CUTOFF_FREQ, Q_FACTOR);
     canonicalFilter->process(signal->t_inputSignal, signal->t_outputSignal[1]);
 
     signal->writeSignal(signal->t_inputSignal, TestFiles::Input);

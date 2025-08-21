@@ -24,13 +24,13 @@ namespace Filter {
 class StateVariableFilter : public IFilter {
 public:
     StateVariableFilter(int fs) {
-        m_fs = DSP_MATH::int_to_q17_14(fs);
-        m_yl0 = DSP_MATH::int_to_q17_14(0);
-        m_yb0 = DSP_MATH::int_to_q17_14(0);
-        m_yh0 = DSP_MATH::int_to_q17_14(0);
-        m_yl1 = DSP_MATH::int_to_q17_14(0);
-        m_yb1 = DSP_MATH::int_to_q17_14(0);
-        m_yh1 = DSP_MATH::int_to_q17_14(0);
+        m_fs = fs;
+        m_yl0 = 0;
+        m_yb0 = 0;
+        m_yh0 = 0;
+        m_yl1 = 0;
+        m_yb1 = 0;
+        m_yh1 = 0;
     };
     void tuning(int fc, double Q);
     int process(int input) override;
