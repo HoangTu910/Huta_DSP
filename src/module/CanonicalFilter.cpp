@@ -111,25 +111,25 @@ void Filter::CanonicalFilter::setType(int type, int fc, double Q)
 
 int Filter::CanonicalFilter::process(int input)
 {
-    int xh0 = DSP_MATH::q1_15_subtract(input, DSP_MATH::q1_15_add(DSP_MATH::q1_15_multiply(m_a1, m_xh1), DSP_MATH::q1_15_multiply(m_a2, m_xh2)));
+    int xh0 = DSP_MATH::q16_15_subtract(input, DSP_MATH::q16_15_add(DSP_MATH::q16_15_multiply(m_a1, m_xh1), DSP_MATH::q16_15_multiply(m_a2, m_xh2)));
     
-    int term1 = DSP_MATH::q1_15_multiply(m_b0, xh0);
-    int term2 = DSP_MATH::q1_15_multiply(m_b1, m_xh1);
-    int term3 = DSP_MATH::q1_15_multiply(m_b2, m_xh2);
+    int term1 = DSP_MATH::q16_15_multiply(m_b0, xh0);
+    int term2 = DSP_MATH::q16_15_multiply(m_b1, m_xh1);
+    int term3 = DSP_MATH::q16_15_multiply(m_b2, m_xh2);
     
-    int y_q = DSP_MATH::q1_15_add(DSP_MATH::q1_15_add(term1, term2), term3);
-    double y = DSP_MATH::q1_15_to_float(y_q) * m_gain;
+    int y_q = DSP_MATH::q16_15_add(DSP_MATH::q16_15_add(term1, term2), term3);
+    double y = DSP_MATH::q16_15_to_float(y_q) * m_gain;
     m_xh2 = m_xh1;
     m_xh1 = xh0;
 
-    return DSP_MATH::float_to_q1_15(y);
+    return DSP_MATH::float_to_q16_15(y);
 }
 
 void Filter::CanonicalFilter::process(std::vector<double> &inputSignal, std::vector<int> &outputSignal)
 {
     outputSignal.clear(); 
     for(double sample : inputSignal) {
-        int q_sample = DSP_MATH::float_to_q1_15(sample); 
+    int q_sample = DSP_MATH::float_to_q16_15(sample); 
         int output = this->process(q_sample); 
         outputSignal.push_back(output); 
     }
@@ -141,25 +141,20 @@ void Filter::CanonicalFilter::normalize(std::vector<double>& coeff)
     if (max_num < 1e-12) max_num = 1.0; 
 
     double scale = 1.0 / max_num;
-
-    // Prevent upscaling (avoid exceeding Q1.15 range). Only allow scale <= 1.0.
     if (scale > 1.0) scale = 1.0;
 
-    // Optionally leave a small headroom to avoid exact 1.0 -> use 0.9999
     const double headroom = 0.9999;
     if (scale * max_num > headroom && scale > 0.0) {
         scale = headroom / max_num;
     }
 
-    m_b0 = DSP_MATH::float_to_q1_15(coeff[0] * scale);
-    m_b1 = DSP_MATH::float_to_q1_15(coeff[1] * scale);
-    m_b2 = DSP_MATH::float_to_q1_15(coeff[2] * scale);
+    m_b0 = DSP_MATH::float_to_q16_15(coeff[0] * scale);
+    m_b1 = DSP_MATH::float_to_q16_15(coeff[1] * scale);
+    m_b2 = DSP_MATH::float_to_q16_15(coeff[2] * scale);
 
-    // a1/a2 correspond to denominator (1 + a1 z^-1 + a2 z^-2) — keep them as computed
-    m_a1 = DSP_MATH::float_to_q1_15(coeff[3]);
-    m_a2 = DSP_MATH::float_to_q1_15(coeff[4]);
-
-    // gain restores overall amplitude if we downscaled numerator; if we didn't scale, gain == 1.0
+    m_a1 = DSP_MATH::float_to_q16_15(coeff[3]);
+    m_a2 = DSP_MATH::float_to_q16_15(coeff[4]);
+    
     m_gain = (scale > 0.0) ? (1.0 / scale) : 1.0;
 }
 

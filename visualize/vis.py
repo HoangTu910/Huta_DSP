@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-fs = 3000  # sampling rate
+fs = 44100  # sampling rate
 
 # Danh sách file và label
 files = [
@@ -22,7 +22,7 @@ for i, (filename, label) in enumerate(files, start=1):
     amp = data[:, 1]
 
     # Chỉ lấy 0.0001 giây đầu
-    mask = time <= 0.00008
+    mask = time <= 0.0000088
 
     # Vẽ subplot
     plt.subplot(len(files), 1, i)

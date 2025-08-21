@@ -3,68 +3,85 @@
 std::vector<int> tan_lookup_table(TAN_TABLE_SIZE);
 std::vector<int> sin_lookup_table(SIN_TABLE_SIZE);
 
-int DSP_MATH::q1_15_add(int a, int b)
+int DSP_MATH::q16_15_add(int a, int b)
 {
     long long result = static_cast<long long>(a) + static_cast<long long>(b);
-    if (result > SATURATION_LIMIT_UPPER) return SATURATION_LIMIT_UPPER;
-    if (result < SATURATION_LIMIT_LOWER) return SATURATION_LIMIT_LOWER;
+    if (result > SATURATION_LIMIT_UPPER) return static_cast<int>(SATURATION_LIMIT_UPPER);
+    if (result < SATURATION_LIMIT_LOWER) return static_cast<int>(SATURATION_LIMIT_LOWER);
     return static_cast<int>(result);
 }
 
-int DSP_MATH::q1_15_subtract(int a, int b)
+int DSP_MATH::q16_15_subtract(int a, int b)
 {
     long long result = static_cast<long long>(a) - static_cast<long long>(b);
-    if (result > SATURATION_LIMIT_UPPER) return SATURATION_LIMIT_UPPER;
-    if (result < SATURATION_LIMIT_LOWER) return SATURATION_LIMIT_LOWER;
+    if (result > SATURATION_LIMIT_UPPER) return static_cast<int>(SATURATION_LIMIT_UPPER);
+    if (result < SATURATION_LIMIT_LOWER) return static_cast<int>(SATURATION_LIMIT_LOWER);
     return static_cast<int>(result);
 }
 
-int DSP_MATH::q1_15_multiply(int a, int b)
+int DSP_MATH::q16_15_multiply(int a, int b)
 {
     long long result = static_cast<long long>(a) * static_cast<long long>(b);
-    result = (result + (Q_SCALE >> 1)) >> Q_BITS;
-    if (result > SATURATION_LIMIT_UPPER) return SATURATION_LIMIT_UPPER;
-    if (result < SATURATION_LIMIT_LOWER) return SATURATION_LIMIT_LOWER;
+    // Q format multiply: (a * b) >> Q_BITS with rounding
+    result = (result + (static_cast<long long>(Q_SCALE) >> 1)) >> Q_BITS;
+    if (result > SATURATION_LIMIT_UPPER) return static_cast<int>(SATURATION_LIMIT_UPPER);
+    if (result < SATURATION_LIMIT_LOWER) return static_cast<int>(SATURATION_LIMIT_LOWER);
     return static_cast<int>(result);
 }
 
-int DSP_MATH::q1_15_divide(int a, int b)
+int DSP_MATH::q16_15_divide(int a, int b)
 {
     if (b == 0) {
         return (a >= 0) ? SATURATION_LIMIT_UPPER : SATURATION_LIMIT_LOWER;
     }
-    long long result = static_cast<long long>(a) * Q_SCALE;
-    result /= b;
-    if (result > SATURATION_LIMIT_UPPER) return SATURATION_LIMIT_UPPER;
-    if (result < SATURATION_LIMIT_LOWER) return SATURATION_LIMIT_LOWER;
+    long long numerator = static_cast<long long>(a) * static_cast<long long>(Q_SCALE);
+
+    long long absb = llabs(static_cast<long long>(b));
+    long long half = absb / 2;
+    if ((numerator >= 0 && b > 0) || (numerator <= 0 && b < 0)) numerator += half;
+    else numerator -= half;
+
+    long long result = numerator / b;
+    if (result > SATURATION_LIMIT_UPPER) return static_cast<int>(SATURATION_LIMIT_UPPER);
+    if (result < SATURATION_LIMIT_LOWER) return static_cast<int>(SATURATION_LIMIT_LOWER);
     return static_cast<int>(result);
 }
 
-int DSP_MATH::float_to_q1_15(double x)
+int DSP_MATH::float_to_q16_15(double x)
 {
-    long long result = static_cast<long long>(round(x * Q_SCALE));
-    if (result > SATURATION_LIMIT_UPPER) return SATURATION_LIMIT_UPPER;
-    if (result < SATURATION_LIMIT_LOWER) return SATURATION_LIMIT_LOWER;
+    if (!std::isfinite(x)) return (x > 0.0) ? static_cast<int>(SATURATION_LIMIT_UPPER) : static_cast<int>(SATURATION_LIMIT_LOWER);
+
+    const double max_representable = static_cast<double>(SATURATION_LIMIT_UPPER) / static_cast<double>(Q_SCALE);
+    const double min_representable = static_cast<double>(SATURATION_LIMIT_LOWER) / static_cast<double>(Q_SCALE);
+
+    if (x > max_representable) x = max_representable;
+    if (x < min_representable) x = min_representable;
+
+    long long result = std::llround(x * static_cast<double>(Q_SCALE));
+    if (result > SATURATION_LIMIT_UPPER) result = SATURATION_LIMIT_UPPER;
+    if (result < SATURATION_LIMIT_LOWER) result = SATURATION_LIMIT_LOWER;
     return static_cast<int>(result);
 }
 
-double DSP_MATH::q1_15_to_float(int q)
+double DSP_MATH::q16_15_to_float(int q)
 {
     return static_cast<double>(q) / Q_SCALE;
 }
 
-int DSP_MATH::int_to_q1_15(int x) {
-    long long result = static_cast<long long>(round(static_cast<double>(x) * Q_SCALE));
-    if (result > SATURATION_LIMIT_UPPER) return SATURATION_LIMIT_UPPER;
-    if (result < SATURATION_LIMIT_LOWER) return SATURATION_LIMIT_LOWER;
+int DSP_MATH::int_to_q16_15(int x) {
+    long long result = static_cast<long long>(x) * static_cast<long long>(Q_SCALE);
+    if (result > SATURATION_LIMIT_UPPER) return static_cast<int>(SATURATION_LIMIT_UPPER);
+    if (result < SATURATION_LIMIT_LOWER) return static_cast<int>(SATURATION_LIMIT_LOWER);
     return static_cast<int>(result);
 }
 
-int DSP_MATH::q1_15_to_int(int q) {
-    long long result = static_cast<long long>(round(static_cast<double>(q) / Q_SCALE));
-    if (result > SATURATION_LIMIT_UPPER) return SATURATION_LIMIT_UPPER;
-    if (result < SATURATION_LIMIT_LOWER) return SATURATION_LIMIT_LOWER;
-    return static_cast<int>(result);
+int DSP_MATH::q16_15_to_int(int q) {
+    long long r;
+    if (q >= 0) r = (static_cast<long long>(q) + (static_cast<long long>(Q_SCALE) >> 1)) >> Q_BITS;
+    else r = (static_cast<long long>(q) - (static_cast<long long>(Q_SCALE) >> 1)) >> Q_BITS;
+    if (r > INT_MAX) return INT_MAX;
+    if (r < INT_MIN) return INT_MIN;
+    return static_cast<int>(r);
 }
 
 void initialize_tan_table() {
@@ -81,7 +98,7 @@ void initialize_sin_table() {
     }
 }
 
-int32_t q1_15_tan_from_table(double angle_rad) {
+int32_t q16_15_tan_from_table(double angle_rad) {
     initialize_tan_table();
     if (angle_rad < 0) angle_rad = 0;
     if (angle_rad > M_PI / 4.0) angle_rad = M_PI / 4.0;
@@ -102,7 +119,7 @@ int32_t q1_15_tan_from_table(double angle_rad) {
 }
 
 
-int DSP_MATH::q1_15_tan(int q_input) {
+int DSP_MATH::q16_15_tan(int q_input) {
     double angle = static_cast<double>(q_input) / Q_SCALE;
     angle = fmod(angle, 2 * M_PI);
     if (angle > M_PI) {
@@ -124,20 +141,20 @@ int DSP_MATH::q1_15_tan(int q_input) {
 
     int result;
     if (angle <= M_PI / 4.0) {
-        result = q1_15_tan_from_table(angle);
+        result = q16_15_tan_from_table(angle);
     } else {
         double reduced_angle = M_PI / 2.0 - angle;
-        int tan_reduced = q1_15_tan_from_table(reduced_angle);
+        int tan_reduced = q16_15_tan_from_table(reduced_angle);
         if (tan_reduced == 0) {
             return negative ? INT_MIN : INT_MAX;
         }
-        result = q1_15_divide(float_to_q1_15(1.0), tan_reduced);
+        result = q16_15_divide(float_to_q16_15(1.0), tan_reduced);
     }
     
     return negative ? -result : result;
 }
 
-int q1_15_sin_from_table(double angle_rad) {
+int q16_15_sin_from_table(double angle_rad) {
     initialize_sin_table();
     if (angle_rad < 0 || angle_rad > M_PI / 2.0) {
         return 0; 
@@ -168,7 +185,7 @@ int q1_15_sin_from_table(double angle_rad) {
  * * @param q_input Góc đầu vào ở định dạng Q1.15.
  * @return Giá trị sin tương ứng ở định dạng Q1.15.
  */
-int DSP_MATH::q1_15_sin(int q_input) {
+int DSP_MATH::q16_15_sin(int q_input) {
     // 1. Chuyển input Q1.15 sang số thực
     double angle = static_cast<double>(q_input) / Q_SCALE;
 
@@ -197,34 +214,34 @@ int DSP_MATH::q1_15_sin(int q_input) {
     }
     
     // 4. Tra cứu giá trị từ bảng
-    int result = q1_15_sin_from_table(reduced_angle);
+    int result = q16_15_sin_from_table(reduced_angle);
     
     // 5. Điều chỉnh dấu dựa trên góc phần tư ban đầu
     return negative ? -result : result;
 }
 
-int DSP_MATH::q1_15_square(int q_input)
+int DSP_MATH::q16_15_square(int q_input)
 {
-    return q1_15_multiply(q_input, q_input);
+    return q16_15_multiply(q_input, q_input);
 }
 
-int DSP_MATH::q1_15_sqrt(int q_input)
+int DSP_MATH::q16_15_sqrt(int q_input)
 {
     if (q_input < 0) {
         return INT_MIN; 
     }
-    double float_value = q1_15_to_float(q_input);
+    double float_value = q16_15_to_float(q_input);
     double sqrt_value = sqrt(float_value);
-    return float_to_q1_15(sqrt_value);
+    return float_to_q16_15(sqrt_value);
 }
 
-int DSP_MATH::q1_15_pow(int q_base, int q_exp) {
-    double base_float = q1_15_to_float(q_base);
-    double exp_float = q1_15_to_float(q_exp);
+int DSP_MATH::q16_15_pow(int q_base, int q_exp) {
+    double base_float = q16_15_to_float(q_base);
+    double exp_float = q16_15_to_float(q_exp);
 
     double result_float = pow(base_float, exp_float);
 
-    int result_q = float_to_q1_15(result_float);
+    int result_q = float_to_q16_15(result_float);
 
     return result_q;
 }

@@ -2,7 +2,7 @@ import numpy as np
 
 import matplotlib.pyplot as plt
 
-fs = 3000  # sampling rate
+fs = 44100  # sampling rate
 
 # Danh sách file và label
 files = [
