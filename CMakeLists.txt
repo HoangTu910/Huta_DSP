@@ -1,16 +1,13 @@
 cmake_minimum_required(VERSION 3.10)
-
-# Tên project
 project(huta_DSP)
 
-# Chuẩn C++
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-# Thêm include path
+# Include project headers
 include_directories(${CMAKE_SOURCE_DIR}/includes)
 
-# Liệt kê source files
+# Source files
 set(SOURCES
     src/main.cpp
     src/module/CanonicalFilter.cpp
@@ -22,5 +19,23 @@ set(SOURCES
     src/module/PeakFilter.cpp
 )
 
-# Tạo executable
 add_executable(huta_dsp ${SOURCES})
+
+# ------------------------------------------
+# Cross-platform handling for libsndfile
+# ------------------------------------------
+if(WIN32)
+    # Windows path to libsndfile
+    # Must download libsndfile Windows binary
+    set(SNDFILE_INCLUDE "C:/libs/libsndfile/include")
+    set(SNDFILE_LIB "C:/libs/libsndfile/lib/libsndfile.lib")
+    
+    target_include_directories(huta_dsp PRIVATE ${SNDFILE_INCLUDE})
+    target_link_libraries(huta_dsp PRIVATE ${SNDFILE_LIB})
+
+    message(STATUS "Building on Windows: libsndfile linked from ${SNDFILE_LIB}")
+else()
+    # Linux / macOS
+    target_include_directories(huta_dsp PRIVATE /usr/include)   
+    target_link_libraries(huta_dsp PRIVATE sndfile)
+endif()

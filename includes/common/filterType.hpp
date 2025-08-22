@@ -39,5 +39,18 @@ namespace TestFiles {
     inline const std::string Input  = "inputSignal.txt";
 }
 
+namespace SoundTestFiles {
+    inline const std::string Output1 = "outputSound_1.wav";
+    inline const std::string Output2 = "outputSound_2.wav";
+    inline const std::string Output3 = "outputSound_3.wav";
+    inline const std::string Output4 = "outputSound_4.wav";
+    inline const std::string Output5 = "outputSound_5.wav";
+    inline const std::string Output6 = "outputSound_6.wav";
+    inline const std::string Output7 = "outputSound_7.wav";
+    inline const std::string Output8 = "outputSound_8.wav";
+    inline const std::string Output9 = "outputSound_9.wav";
+    inline const std::string Output10 = "outputSound_10.wav";
+    inline const std::string Input  = "inputSound.wav";
+}
 
 #endif // FILTER_TYPE_HPP

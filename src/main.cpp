@@ -10,6 +10,7 @@
 #include "../includes/module/PeakFilter.hpp"
 #include "../includes/test/Signal.hpp"
 #include "../includes/common/filterType.hpp"
+#include <sndfile.h>
 
 #include <memory>
 
@@ -17,10 +18,10 @@ using namespace std;
 
 /* Some parameter */
 const int SAMP_FREQ = 44100; 
-const int CUTOFF_FREQ = 200;
+const int CUTOFF_FREQ = 800;
 const int CENTER_FREQ = 800;
 const double Q_FACTOR = 1;
-const int SIGNAL_DURATION = 1;
+const int SIGNAL_DURATION = 2;
 const double SIGNAL_AMPLITUDE = 0.06;
 const double GAIN_FACTOR = 20.0; // dB
 /* Some parameter */
@@ -42,30 +43,37 @@ int main() {
     /* Canonical testing */
     unique_ptr<Filter::CanonicalFilter> canonicalFilter(new Filter::CanonicalFilter(SAMP_FREQ));
 
-    canonicalFilter->setType(LOW_PASS_2, CUTOFF_FREQ, Q_FACTOR);
+    canonicalFilter->setType(HIGH_PASS_2, CUTOFF_FREQ, Q_FACTOR);
     canonicalFilter->process(signal->t_inputSignal, signal->t_outputSignal[1]);
 
-    signal->writeInSignal(signal->t_inputSignal, TestFiles::Input);
-    signal->writeOutSignal(signal->t_outputSignal[1], TestFiles::Output1);
+    /* Write signal into .txt and plot it out using python in visualize/ */
+    signal->writeSignal(signal->t_inputSignal, TestFiles::Input);
+    signal->writeSignal(signal->t_outputSignal[1], TestFiles::Output1);
+
+    /* We can hear the sound of the signal by using createSoundSignal() method
+       Remember to change the namespace from TestFiles to SoundTestFiles    */
+    signal->createSoundSignal(signal->t_outputSignal[1], SoundTestFiles::Output1);
 
     /* SVF testing */
     unique_ptr<Filter::StateVariableFilter> svf(new Filter::StateVariableFilter(SAMP_FREQ));
     svf->tuning(CUTOFF_FREQ, Q_FACTOR);
     svf->process(signal->t_inputSignal, signal->t_outputSignal[2], 
                 signal->t_outputSignal[3], signal->t_outputSignal[4]); // three outputs: hpass, bpass, lpass
-    signal->writeOutSignal(signal->t_outputSignal[2], TestFiles::Output2);
-    signal->writeOutSignal(signal->t_outputSignal[3], TestFiles::Output3);
-    signal->writeOutSignal(signal->t_outputSignal[4], TestFiles::Output4);
+    signal->writeSignal(signal->t_outputSignal[2], TestFiles::Output2);
+    signal->writeSignal(signal->t_outputSignal[3], TestFiles::Output3);
+    signal->writeSignal(signal->t_outputSignal[4], TestFiles::Output4);
 
     /* Shelving testing */
     unique_ptr<Filter::ShelvingFilter> shelvingFilter(new Filter::ShelvingFilter(SAMP_FREQ));
     shelvingFilter->setType(LF_BOOST, CUTOFF_FREQ, GAIN_FACTOR);
     shelvingFilter->process(signal->t_inputSignal, signal->t_outputSignal[5]);
-    signal->writeOutSignal(signal->t_outputSignal[5], TestFiles::Output5);
+    signal->writeSignal(signal->t_outputSignal[5], TestFiles::Output5);
+    signal->createSoundSignal(signal->t_outputSignal[5], SoundTestFiles::Output5);
 
     /* Peak testing */
     unique_ptr<Filter::PeakFilter> peakFilter(new Filter::PeakFilter(SAMP_FREQ));
     peakFilter->setType(PEAK_BOOST_MODE, CUTOFF_FREQ, GAIN_FACTOR, Q_FACTOR);
-    peakFilter->peakProcess(signal->t_inputSignal, signal->t_outputSignal[6]); // please notice that here I use peakProcess(), not the process()!
-    signal->writeOutSignal(signal->t_outputSignal[6], TestFiles::Output6);
+    peakFilter->peakProcess(signal->t_inputSignal, signal->t_outputSignal[6]); // please notice that here I used peakProcess(), not process()!
+    signal->writeSignal(signal->t_outputSignal[6], TestFiles::Output6);
+    signal->createSoundSignal(signal->t_outputSignal[6], SoundTestFiles::Output6);
 }
