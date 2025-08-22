@@ -1,7 +1,7 @@
 /*
     Author: HuTao
     Implementation of some digital signal processing filters in C++
-    All the computational was done using Q17.14 format 
+    All the computational was done using Q16.15 format 
 */
 
 #include "../includes/module/CanonicalFilter.hpp"
