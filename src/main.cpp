@@ -16,7 +16,7 @@ using namespace std;
 
 /* Some parameter */
 const int SAMP_FREQ = 44100; 
-const int CUTOFF_FREQ = 100;
+const int CUTOFF_FREQ = 800;
 const int CENTER_FREQ = 800;
 const double Q_FACTOR = 0.707;
 const int SIGNAL_DURATION = 1;
