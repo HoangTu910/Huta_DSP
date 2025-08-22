@@ -79,3 +79,5 @@ void Filter::StateVariableFilter::process(std::vector<double> &inputSignal, std:
     }
 }
 
+void Filter::StateVariableFilter::normalize(std::vector<double> &coeff) { return; } //unused
+

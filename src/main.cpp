@@ -7,6 +7,7 @@
 #include "../includes/module/CanonicalFilter.hpp"
 #include "../includes/module/StateVariableFilter.hpp"
 #include "../includes/module/ShelvingFilter.hpp"
+#include "../includes/module/PeakFilter.hpp"
 #include "../includes/test/Signal.hpp"
 #include "../includes/common/filterType.hpp"
 
@@ -16,9 +17,9 @@ using namespace std;
 
 /* Some parameter */
 const int SAMP_FREQ = 44100; 
-const int CUTOFF_FREQ = 800;
+const int CUTOFF_FREQ = 200;
 const int CENTER_FREQ = 800;
-const double Q_FACTOR = 0.707;
+const double Q_FACTOR = 1;
 const int SIGNAL_DURATION = 1;
 const double SIGNAL_AMPLITUDE = 0.06;
 const double GAIN_FACTOR = 20.0; // dB
@@ -61,4 +62,10 @@ int main() {
     shelvingFilter->setType(LF_BOOST, CUTOFF_FREQ, GAIN_FACTOR);
     shelvingFilter->process(signal->t_inputSignal, signal->t_outputSignal[5]);
     signal->writeSignal(signal->t_outputSignal[5], TestFiles::Output5);
+
+    /* Peak testing */
+    unique_ptr<Filter::PeakFilter> peakFilter(new Filter::PeakFilter(SAMP_FREQ));
+    peakFilter->setType(PEAK_BOOST_MODE, CUTOFF_FREQ, GAIN_FACTOR, Q_FACTOR);
+    peakFilter->peakProcess(signal->t_inputSignal, signal->t_outputSignal[6]); // please notice that here I use peakProcess(), not the process()!
+    signal->writeSignal(signal->t_outputSignal[6], TestFiles::Output6);
 }

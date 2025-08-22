@@ -12,7 +12,7 @@ class IFilter {
 public:
     virtual int process(int input) = 0;
     virtual void process(std::vector<double> &inputSignal, std::vector<int> &outputSignal) = 0;
-    virtual void normalize(std::vector<double> &coeff);
+    virtual void normalize(std::vector<double> &coeff) = 0;
 };
 
 #endif

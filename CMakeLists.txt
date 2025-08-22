@@ -19,6 +19,7 @@ set(SOURCES
     src/dsp_math/QNumber.cpp  
     src/module/StateVariableFilter.cpp
     src/module/ShelvingFilter.cpp
+    src/module/PeakFilter.cpp
 )
 
 # Tạo executable

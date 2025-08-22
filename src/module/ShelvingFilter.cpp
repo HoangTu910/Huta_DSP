@@ -6,21 +6,15 @@ void Filter::ShelvingFilter::setType(int type, int fc, double G)
         hu_alert("It still run but the type might be wrong?");
     }
 
-    // Convert G to V0
     double G_d = G;
     double V0_d = pow(10.0, G_d / 20.0);
-
     double K_d = tan(M_PI * fc / static_cast<double>(m_fs));
     double K_square_d = K_d * K_d;
-
-    // Common terms for all filters
     double denominator;
     double sqrt_2_d = sqrt(2.0);
     double sqrt_V0_d = sqrt(V0_d);
-
     double sqrt_2_K_d = sqrt_2_d * K_d;
     double sqrt_V0_K_d = sqrt_V0_d * K_d;
-
     double b0_val, b1_val, b2_val, a1_val, a2_val;
 
     /*

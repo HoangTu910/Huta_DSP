@@ -15,6 +15,10 @@
 #define LF_CUT 10
 #define HF_BOOST 11
 #define HF_CUT 12
+#define CANONICAL_BOOST_MODE 14
+#define CANONICAL_CUT_MODE 15
+#define PEAK_BOOST_MODE 16
+#define PEAK_CUT_MODE 17
 
 const double PI_DOUBLE = 3.14159265358979323846;
 const int SCALE_FACTOR = 2;
