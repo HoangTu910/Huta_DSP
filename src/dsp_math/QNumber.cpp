@@ -178,18 +178,9 @@ int q16_15_sin_from_table(double angle_rad) {
     return static_cast<int>(round(value_low + fraction * (value_high - value_low)));
 }
 
-/**
- * @brief Tính giá trị sin của một góc ở định dạng Q1.15.
- * * Hàm này xử lý các góc trong phạm vi [-∞, +∞] bằng cách chuẩn hóa
- * và sử dụng tính chất đối xứng của hàm sin để tra cứu bảng.
- * * @param q_input Góc đầu vào ở định dạng Q1.15.
- * @return Giá trị sin tương ứng ở định dạng Q1.15.
- */
 int DSP_MATH::q16_15_sin(int q_input) {
-    // 1. Chuyển input Q1.15 sang số thực
     double angle = static_cast<double>(q_input) / Q_SCALE;
 
-    // 2. Chuẩn hóa góc về phạm vi [0, 2π)
     angle = fmod(angle, 2 * M_PI);
     if (angle < 0) {
         angle += 2 * M_PI;
@@ -198,25 +189,22 @@ int DSP_MATH::q16_15_sin(int q_input) {
     bool negative = false;
     double reduced_angle;
     
-    // 3. Phân tích góc vào các góc chuẩn của vòng tròn đơn vị
-    if (angle <= M_PI / 2.0) { // Góc trong [0, π/2] (Góc phần tư I)
+    if (angle <= M_PI / 2.0) { 
         reduced_angle = angle;
         negative = false;
-    } else if (angle <= M_PI) { // Góc trong (π/2, π] (Góc phần tư II)
+    } else if (angle <= M_PI) { 
         reduced_angle = M_PI - angle;
         negative = false;
-    } else if (angle <= 3.0 * M_PI / 2.0) { // Góc trong (π, 3π/2] (Góc phần tư III)
+    } else if (angle <= 3.0 * M_PI / 2.0) { 
         reduced_angle = angle - M_PI;
         negative = true;
-    } else { // Góc trong (3π/2, 2π) (Góc phần tư IV)
+    } else { 
         reduced_angle = 2 * M_PI - angle;
         negative = true;
     }
     
-    // 4. Tra cứu giá trị từ bảng
     int result = q16_15_sin_from_table(reduced_angle);
     
-    // 5. Điều chỉnh dấu dựa trên góc phần tư ban đầu
     return negative ? -result : result;
 }
 

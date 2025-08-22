@@ -8,6 +8,7 @@
 #include <vector>
 #include <numeric>
 #include <cmath>
+#include <algorithm>
 #include <fstream>
 #include <iostream>
 
@@ -38,7 +39,23 @@ public:
     std::vector<std::vector<int>> t_outputSignal;  
 
     template<typename TT>
-    void writeSignal(const std::vector<TT> &signal, const std::string &filename) {
+    void writeOutSignal(const std::vector<TT> &signal, const std::string &filename) {
+        int maxVal = *std::max_element(signal.begin(), signal.end(),
+                        [](int a, int b) { return std::abs(a) < std::abs(b); });
+        std::ofstream outFile(filename);
+        if (outFile.is_open()) {
+            for (size_t i = 0; i < signal.size(); ++i) {
+                outFile << i / static_cast<double>(m_sampFreq) << " " << static_cast<double>((signal[i] + 0.0)/(maxVal + 0.0)) << "\n";
+            }
+            outFile.close();
+            std::cout << "Write done " << filename << std::endl;
+        } else {
+            std::cout << "Error writing to " << filename << std::endl;
+        }
+    }
+
+    template<typename TT>
+    void writeInSignal(const std::vector<TT> &signal, const std::string &filename) {
         std::ofstream outFile(filename);
         if (outFile.is_open()) {
             for (size_t i = 0; i < signal.size(); ++i) {

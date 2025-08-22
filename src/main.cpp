@@ -45,27 +45,27 @@ int main() {
     canonicalFilter->setType(LOW_PASS_2, CUTOFF_FREQ, Q_FACTOR);
     canonicalFilter->process(signal->t_inputSignal, signal->t_outputSignal[1]);
 
-    signal->writeSignal(signal->t_inputSignal, TestFiles::Input);
-    signal->writeSignal(signal->t_outputSignal[1], TestFiles::Output1);
+    signal->writeInSignal(signal->t_inputSignal, TestFiles::Input);
+    signal->writeOutSignal(signal->t_outputSignal[1], TestFiles::Output1);
 
     /* SVF testing */
     unique_ptr<Filter::StateVariableFilter> svf(new Filter::StateVariableFilter(SAMP_FREQ));
     svf->tuning(CUTOFF_FREQ, Q_FACTOR);
     svf->process(signal->t_inputSignal, signal->t_outputSignal[2], 
                 signal->t_outputSignal[3], signal->t_outputSignal[4]); // three outputs: hpass, bpass, lpass
-    signal->writeSignal(signal->t_outputSignal[2], TestFiles::Output2);
-    signal->writeSignal(signal->t_outputSignal[3], TestFiles::Output3);
-    signal->writeSignal(signal->t_outputSignal[4], TestFiles::Output4);
+    signal->writeOutSignal(signal->t_outputSignal[2], TestFiles::Output2);
+    signal->writeOutSignal(signal->t_outputSignal[3], TestFiles::Output3);
+    signal->writeOutSignal(signal->t_outputSignal[4], TestFiles::Output4);
 
     /* Shelving testing */
     unique_ptr<Filter::ShelvingFilter> shelvingFilter(new Filter::ShelvingFilter(SAMP_FREQ));
     shelvingFilter->setType(LF_BOOST, CUTOFF_FREQ, GAIN_FACTOR);
     shelvingFilter->process(signal->t_inputSignal, signal->t_outputSignal[5]);
-    signal->writeSignal(signal->t_outputSignal[5], TestFiles::Output5);
+    signal->writeOutSignal(signal->t_outputSignal[5], TestFiles::Output5);
 
     /* Peak testing */
     unique_ptr<Filter::PeakFilter> peakFilter(new Filter::PeakFilter(SAMP_FREQ));
     peakFilter->setType(PEAK_BOOST_MODE, CUTOFF_FREQ, GAIN_FACTOR, Q_FACTOR);
     peakFilter->peakProcess(signal->t_inputSignal, signal->t_outputSignal[6]); // please notice that here I use peakProcess(), not the process()!
-    signal->writeSignal(signal->t_outputSignal[6], TestFiles::Output6);
+    signal->writeOutSignal(signal->t_outputSignal[6], TestFiles::Output6);
 }
