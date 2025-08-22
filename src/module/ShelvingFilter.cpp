@@ -2,64 +2,80 @@
 
 void Filter::ShelvingFilter::setType(int type, int fc, double G)
 {
-    if(type < LF_BOOST || type > HF_CUT) {
+    if (type < LF_BOOST || type > HF_CUT) {
         hu_alert("It still run but the type might be wrong?");
     }
-    
+
     // Convert G to V0
-    int G_q = DSP_MATH::float_to_q17_14(G);
-    int V0_q = DSP_MATH::q17_14_pow(DSP_MATH::int_to_q17_14(10), DSP_MATH::q17_14_divide(G_q, DSP_MATH::int_to_q17_14(20)));
-    
-    int K_q = DSP_MATH::q17_14_tan(DSP_MATH::q17_14_divide(DSP_MATH::q17_14_multiply(DSP_MATH::float_to_q17_14(M_PI), DSP_MATH::int_to_q17_14(fc)), m_fs));
-    int K_square_q = DSP_MATH::q17_14_square(K_q);
+    double G_d = G;
+    double V0_d = pow(10.0, G_d / 20.0);
+
+    double K_d = tan(M_PI * fc / static_cast<double>(m_fs));
+    double K_square_d = K_d * K_d;
 
     // Common terms for all filters
-    int denominator;
-    int sqrt_2_q = DSP_MATH::q17_14_sqrt(DSP_MATH::int_to_q17_14(2));
-    int sqrt_V0_q = DSP_MATH::q17_14_sqrt(V0_q);
+    double denominator;
+    double sqrt_2_d = sqrt(2.0);
+    double sqrt_V0_d = sqrt(V0_d);
 
-    int sqrt_2_K_q = DSP_MATH::q17_14_multiply(sqrt_2_q, K_q);
-    int sqrt_V0_K_q = DSP_MATH::q17_14_multiply(sqrt_V0_q, K_q);
+    double sqrt_2_K_d = sqrt_2_d * K_d;
+    double sqrt_V0_K_d = sqrt_V0_d * K_d;
+
+    double b0_val, b1_val, b2_val, a1_val, a2_val;
 
     /*
-        All the formulas was used from DAFX-Digital Audio Effects book - Chapter 2
+        All the formulas were used from DAFX-Digital Audio Effects book - Chapter 2
     */
 
-    switch (type){
+    switch (type) {
         case LF_BOOST:
-            denominator = DSP_MATH::q17_14_add(DSP_MATH::q17_14_add(DSP_MATH::int_to_q17_14(1), sqrt_2_K_q), K_square_q);
-            m_b0 = DSP_MATH::q17_14_divide(DSP_MATH::q17_14_add(DSP_MATH::q17_14_add(DSP_MATH::int_to_q17_14(1), sqrt_V0_K_q), DSP_MATH::q17_14_multiply(V0_q, K_square_q)), denominator);
-            m_b1 = DSP_MATH::q17_14_divide(DSP_MATH::q17_14_multiply(DSP_MATH::int_to_q17_14(2), DSP_MATH::q17_14_subtract(DSP_MATH::q17_14_multiply(V0_q, K_square_q), DSP_MATH::int_to_q17_14(1))), denominator);
-            m_b2 = DSP_MATH::q17_14_divide(DSP_MATH::q17_14_add(DSP_MATH::q17_14_subtract(DSP_MATH::int_to_q17_14(1), sqrt_V0_K_q), DSP_MATH::q17_14_multiply(V0_q, K_square_q)), denominator);
-            m_a1 = DSP_MATH::q17_14_divide(DSP_MATH::q17_14_multiply(DSP_MATH::int_to_q17_14(2), DSP_MATH::q17_14_subtract(K_square_q, DSP_MATH::int_to_q17_14(1))), denominator);
-            m_a2 = DSP_MATH::q17_14_divide(DSP_MATH::q17_14_add(DSP_MATH::q17_14_subtract(DSP_MATH::int_to_q17_14(1), sqrt_2_K_q), K_square_q), denominator);
+            denominator = 1.0 + sqrt_2_K_d + K_square_d;
+            b0_val = (1.0 + sqrt_V0_K_d + V0_d * K_square_d) / denominator;
+            b1_val = (2.0 * (V0_d * K_square_d - 1.0)) / denominator;
+            b2_val = (1.0 - sqrt_V0_K_d + V0_d * K_square_d) / denominator;
+            a1_val = (2.0 * (K_square_d - 1.0)) / denominator;
+            a2_val = (1.0 - sqrt_2_K_d + K_square_d) / denominator;
             break;
 
         case LF_CUT:
-            denominator = DSP_MATH::q17_14_add(DSP_MATH::q17_14_add(V0_q, sqrt_2_K_q), K_square_q);
-            m_b0 = DSP_MATH::q17_14_divide(DSP_MATH::q17_14_multiply(V0_q, DSP_MATH::q17_14_add(DSP_MATH::q17_14_add(DSP_MATH::int_to_q17_14(1), sqrt_2_K_q), K_square_q)), denominator);
-            m_b1 = DSP_MATH::q17_14_divide(DSP_MATH::q17_14_multiply(DSP_MATH::q17_14_multiply(DSP_MATH::int_to_q17_14(2), V0_q), DSP_MATH::q17_14_subtract(K_square_q, DSP_MATH::int_to_q17_14(1))), denominator);
-            m_b2 = DSP_MATH::q17_14_divide(DSP_MATH::q17_14_multiply(V0_q, DSP_MATH::q17_14_add(DSP_MATH::q17_14_subtract(DSP_MATH::int_to_q17_14(1), sqrt_2_K_q), K_square_q)), denominator);
-            m_a1 = DSP_MATH::q17_14_divide(DSP_MATH::q17_14_multiply(DSP_MATH::int_to_q17_14(2), DSP_MATH::q17_14_subtract(K_square_q, V0_q)), denominator);
-            m_a2 = DSP_MATH::q17_14_divide(DSP_MATH::q17_14_add(DSP_MATH::q17_14_subtract(V0_q, sqrt_2_K_q), K_square_q), denominator);
+            denominator = V0_d + sqrt_2_K_d + K_square_d;
+            b0_val = (V0_d * (1.0 + sqrt_2_K_d + K_square_d)) / denominator;
+            b1_val = (2.0 * V0_d * (K_square_d - 1.0)) / denominator;
+            b2_val = (V0_d * (1.0 - sqrt_2_K_d + K_square_d)) / denominator;
+            a1_val = (2.0 * (K_square_d - V0_d)) / denominator;
+            a2_val = (V0_d - sqrt_2_K_d + K_square_d) / denominator;
             break;
 
         case HF_BOOST:
-            denominator = DSP_MATH::q17_14_add(DSP_MATH::q17_14_add(DSP_MATH::int_to_q17_14(1), sqrt_2_K_q), K_square_q);
-            m_b0 = DSP_MATH::q17_14_divide(DSP_MATH::q17_14_add(DSP_MATH::q17_14_add(V0_q, sqrt_V0_K_q), K_square_q), denominator);
-            m_b1 = DSP_MATH::q17_14_divide(DSP_MATH::q17_14_multiply(DSP_MATH::int_to_q17_14(2), DSP_MATH::q17_14_subtract(K_square_q, V0_q)), denominator);
-            m_b2 = DSP_MATH::q17_14_divide(DSP_MATH::q17_14_add(DSP_MATH::q17_14_subtract(V0_q, sqrt_V0_K_q), K_square_q), denominator);
-            m_a1 = DSP_MATH::q17_14_divide(DSP_MATH::q17_14_multiply(DSP_MATH::int_to_q17_14(2), DSP_MATH::q17_14_subtract(K_square_q, DSP_MATH::int_to_q17_14(1))), denominator);
-            m_a2 = DSP_MATH::q17_14_divide(DSP_MATH::q17_14_add(DSP_MATH::q17_14_subtract(DSP_MATH::int_to_q17_14(1), sqrt_2_K_q), K_square_q), denominator);
+            denominator = 1.0 + sqrt_2_K_d + K_square_d;
+            b0_val = (V0_d + sqrt_V0_K_d + K_square_d) / denominator;
+            b1_val = (2.0 * (K_square_d - V0_d)) / denominator;
+            b2_val = (V0_d - sqrt_V0_K_d + K_square_d) / denominator;
+            a1_val = (2.0 * (K_square_d - 1.0)) / denominator;
+            a2_val = (1.0 - sqrt_2_K_d + K_square_d) / denominator;
             break;
 
         case HF_CUT:
-            denominator = DSP_MATH::q17_14_add(DSP_MATH::q17_14_add(V0_q, sqrt_V0_K_q), DSP_MATH::q17_14_multiply(V0_q, K_square_q));
-            m_b0 = DSP_MATH::q17_14_divide(DSP_MATH::q17_14_add(DSP_MATH::q17_14_add(DSP_MATH::int_to_q17_14(1), sqrt_2_K_q), K_square_q), denominator);
-            m_b1 = DSP_MATH::q17_14_divide(DSP_MATH::q17_14_multiply(DSP_MATH::int_to_q17_14(2), DSP_MATH::q17_14_subtract(K_square_q, DSP_MATH::int_to_q17_14(1))), denominator);
-            m_b2 = DSP_MATH::q17_14_divide(DSP_MATH::q17_14_add(DSP_MATH::q17_14_subtract(DSP_MATH::int_to_q17_14(1), sqrt_2_K_q), K_square_q), denominator);
-            m_a1 = DSP_MATH::q17_14_divide(DSP_MATH::q17_14_multiply(DSP_MATH::int_to_q17_14(2), DSP_MATH::q17_14_subtract(DSP_MATH::q17_14_multiply(V0_q, K_square_q), DSP_MATH::int_to_q17_14(1))), denominator);
-            m_a2 = DSP_MATH::q17_14_divide(DSP_MATH::q17_14_add(DSP_MATH::q17_14_subtract(V0_q, sqrt_V0_K_q), DSP_MATH::q17_14_multiply(V0_q, K_square_q)), denominator);
+            denominator = V0_d + sqrt_V0_K_d + V0_d * K_square_d;
+            b0_val = (1.0 + sqrt_2_K_d + K_square_d) / denominator;
+            b1_val = (2.0 * (K_square_d - 1.0)) / denominator;
+            b2_val = (1.0 - sqrt_2_K_d + K_square_d) / denominator;
+            a1_val = (2.0 * (V0_d * K_square_d - 1.0)) / denominator;
+            a2_val = (V0_d - sqrt_V0_K_d + V0_d * K_square_d) / denominator;
+            break;
+
+        default:
+            b0_val = b1_val = b2_val = a1_val = a2_val = 0.0;
             break;
     }
+
+    std::vector<double> coeff = {b0_val, b1_val, b2_val, a1_val, a2_val};
+    this->normalize(coeff);
+
+    hu_debug(m_a1);
+    hu_debug(m_a2);
+    hu_debug(m_b0);
+    hu_debug(m_b1);
+    hu_debug(m_b2);
+    hu_debug(m_gain);
 }

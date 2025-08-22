@@ -18,16 +18,16 @@ namespace Filter {
 class ShelvingFilter : public CanonicalFilter {
 public:
     ShelvingFilter(int fs) : CanonicalFilter(fs) {
-        m_fs = DSP_MATH::int_to_q17_14(fs);
-        m_xh1 = DSP_MATH::q17_14_to_int(0);
-        m_xh2 = DSP_MATH::q17_14_to_int(0);
-        m_b0 = DSP_MATH::q17_14_to_int(0);
-        m_b1 = DSP_MATH::q17_14_to_int(0);
-        m_b2 = DSP_MATH::q17_14_to_int(0);
-        m_a1 = DSP_MATH::q17_14_to_int(0);
-        m_a2 = DSP_MATH::q17_14_to_int(0);
-        m_K = DSP_MATH::q17_14_to_int(0);
-        m_fc = DSP_MATH::q17_14_to_int(0);
+        m_fs = fs;
+        m_xh1 = 0;
+        m_xh2 = 0;
+        m_b0 = 0;
+        m_b1 = 0;
+        m_b2 = 0;
+        m_a1 = 0;
+        m_a2 = 0;
+        m_K = 0;
+        m_fc = 0;
     }
     void setType(int type, int fc, double factor) override; //G is gain instead of Q
 };

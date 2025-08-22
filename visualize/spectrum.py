@@ -1,4 +1,5 @@
 import numpy as np
+
 import matplotlib.pyplot as plt
 
 fs = 44100  # sampling rate
@@ -18,21 +19,22 @@ plt.figure(figsize=(14, 10))
 for i, (filename, label) in enumerate(files, start=1):
     # Đọc dữ liệu
     data = np.loadtxt(filename)
-    time = data[:, 0] / fs
     amp = data[:, 1]
 
-    # Chỉ lấy 0.0001 giây đầu
-    mask = time <= 0.0000088
+    # Tính FFT
+    N = len(amp)
+    freq = np.fft.rfftfreq(N, d=1/fs)
+    spectrum = np.abs(np.fft.rfft(amp))
 
-    # Vẽ subplot
+    # Vẽ phổ tần số
     plt.subplot(len(files), 1, i)
-    plt.plot(time[mask], amp[mask], label=label)
-    plt.xlabel("Time (s)")
-    plt.ylabel("Amplitude")
-    plt.title(f"{label} (fs = {fs} Hz) – first 0.0001 s")
+    plt.plot(freq, spectrum, label=label)
+    plt.xlabel("Frequency (Hz)")
+    plt.ylabel("Magnitude")
+    plt.title(f"Frequency Spectrum of {label}")
     plt.grid(True)
     plt.legend()
 
 plt.tight_layout()
-plt.savefig("plot.png")
+plt.savefig("spectrum.png")
 plt.show()

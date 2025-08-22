@@ -15,7 +15,7 @@ const int MAX_TEST_SIGNALS = 10;
 
 class Signal {
 public:
-    Signal(int samp_freq, int duration, int amplitude) 
+    Signal(int samp_freq, int duration, double amplitude) 
         : m_sampFreq(samp_freq),
           m_duration(duration),
           m_amplitude(amplitude),
@@ -54,7 +54,7 @@ public:
 private:
     int m_sampFreq;
     int m_duration;
-    int m_amplitude;
+    double m_amplitude;
 
     void writeMixedSignal();
     void writeFilteredSignal();

@@ -16,6 +16,9 @@
 #define HF_BOOST 11
 #define HF_CUT 12
 
+const double PI_DOUBLE = 3.14159265358979323846;
+const int SCALE_FACTOR = 2;
+
 /* I defined 10 files for signal testing, you can increase it if needed ^^ */
 
 namespace TestFiles {
