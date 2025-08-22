@@ -1,1 +1,3 @@
-# Huta_DSP
+## Huta_DSP
+
+Learning and Practicing project
