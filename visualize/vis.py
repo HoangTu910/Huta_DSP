@@ -11,6 +11,7 @@ files = [
     ("outputSignal_3.txt", "Output Signal 3"),
     ("outputSignal_4.txt", "Output Signal 4"),
     ("outputSignal_5.txt", "Output Signal 5"),
+    ("outputSignal_6.txt", "Output Signal 6"),
 ]
 
 plt.figure(figsize=(14, 10))

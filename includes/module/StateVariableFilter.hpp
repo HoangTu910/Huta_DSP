@@ -38,6 +38,7 @@ public:
     output processAll(int input);
     void process(std::vector<double> &inputSignal, std::vector<int> &h_outputSignal, 
                  std::vector<int> &b_outputSignal, std::vector<int> &l_outputSignal);
+    void normalize(std::vector<double> &coeff) override;
 
 private:
     int m_fs, m_fc;
