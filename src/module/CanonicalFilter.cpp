@@ -10,7 +10,7 @@ void Filter::CanonicalFilter::setType(int type, int fc, double Q)
     double m_K_d = tan(div_d);
     double K_square_d = m_K_d * m_K_d;
 
-    double b0_val, b1_val, b2_val, a1_val, a2_val;
+    double b0_val = 0.0, b1_val = 0.0, b2_val = 0.0, a1_val = 0.0, a2_val = 0.0;
 
     /*
      * All the formulas were used from DAFX-Digital Audio Effects book - Chapter 2

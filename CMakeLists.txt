@@ -27,9 +27,8 @@ add_executable(huta_dsp ${SOURCES})
 if(WIN32)
     # Windows path to libsndfile
     # Must download libsndfile Windows binary
-    set(SNDFILE_INCLUDE "C:/libs/libsndfile/include")
-    set(SNDFILE_LIB "C:/libs/libsndfile/lib/libsndfile.lib")
-    
+    set(SNDFILE_INCLUDE "C:/vcpkg/installed/x64-windows/include")
+    set(SNDFILE_LIB "C:/vcpkg/installed/x64-windows/lib/sndfile.lib")
     target_include_directories(huta_dsp PRIVATE ${SNDFILE_INCLUDE})
     target_link_libraries(huta_dsp PRIVATE ${SNDFILE_LIB})
 

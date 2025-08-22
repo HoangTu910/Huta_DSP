@@ -43,8 +43,6 @@ public:
 
     template<typename TT>
     void writeSignal(const std::vector<TT> &signal, const std::string &filename) {
-        int maxVal = *std::max_element(signal.begin(), signal.end(),
-                        [](int a, int b) { return std::abs(a) < std::abs(b); });
         std::ofstream outFile(filename);
         if (outFile.is_open()) {
             for (size_t i = 0; i < signal.size(); ++i) {

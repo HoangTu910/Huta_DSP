@@ -5,10 +5,11 @@
 #define M_PI 3.14159265358979323846
 #endif
 
-#include<cmath>
-#include<climits>
-#include<vector>
-#include"../common/debug.hpp"
+#include <cmath>
+#include <climits>
+#include <vector>
+#include <cstdint>
+#include "../common/debug.hpp"
 
 /*
     Using Q16.15 format: signed 32-bit fixed point with 16 integer bits and

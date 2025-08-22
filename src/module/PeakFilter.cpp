@@ -15,8 +15,8 @@ void Filter::PeakFilter::setType(int type, int fc, double G, double Q) {
     double cC_d = (tan((M_PI * fc) / static_cast<double>(m_fs)) - V0_d)/(tan((M_PI * fc) / static_cast<double>(m_fs)) + V0_d);
     double K_d = tan((M_PI * fc) / static_cast<double>(m_fs));
     double K_square_d = K_d * K_d;
-    double b0_val, b1_val, b2_val, a1_val, a2_val;
-    double det;
+    double b0_val = 0.0, b1_val = 0.0, b2_val = 0.0, a1_val = 0.0, a2_val = 0.0;
+    double det = 0.0;
 
     switch(type) {
         case CANONICAL_BOOST_MODE: {

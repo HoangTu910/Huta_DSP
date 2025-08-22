@@ -15,7 +15,7 @@ void Filter::ShelvingFilter::setType(int type, int fc, double G)
     double sqrt_V0_d = sqrt(V0_d);
     double sqrt_2_K_d = sqrt_2_d * K_d;
     double sqrt_V0_K_d = sqrt_V0_d * K_d;
-    double b0_val, b1_val, b2_val, a1_val, a2_val;
+    double b0_val = 0.0, b1_val = 0.0, b2_val = 0.0, a1_val = 0.0, a2_val = 0.0;
 
     /*
         All the formulas were used from DAFX-Digital Audio Effects book - Chapter 2

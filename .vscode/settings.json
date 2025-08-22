@@ -60,6 +60,7 @@
         "ratio": "cpp",
         "sstream": "cpp",
         "stop_token": "cpp",
-        "thread": "cpp"
+        "thread": "cpp",
+        "climits": "cpp"
     }
 }
