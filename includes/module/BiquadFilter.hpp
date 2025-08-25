@@ -21,6 +21,7 @@ class BiquadFilter : public CanonicalFilter {
 public:
     BiquadFilter(int fs) : CanonicalFilter(fs) {
         m_fs = fs;
+        m_shelfSlope = 1.0; // standard
         hu_debug(m_fs);
         m_xh1 = 0;
         m_xh2 = 0;

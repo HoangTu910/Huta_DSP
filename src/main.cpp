@@ -5,6 +5,7 @@
 */
 
 #include "../includes/module/CanonicalFilter.hpp"
+#include "../includes/module/BiquadFilter.hpp"
 #include "../includes/module/StateVariableFilter.hpp"
 #include "../includes/module/ShelvingFilter.hpp"
 #include "../includes/module/PeakFilter.hpp"
@@ -18,12 +19,13 @@ using namespace std;
 
 /* Some parameter */
 const int SAMP_FREQ = 44100; 
-const int CUTOFF_FREQ = 800;
+const int CUTOFF_FREQ = 200;
 const int CENTER_FREQ = 800;
-const double Q_FACTOR = 1;
+const double Q_FACTOR = 0.707;
 const int SIGNAL_DURATION = 2;
 const double SIGNAL_AMPLITUDE = 0.06;
 const double GAIN_FACTOR = 20.0; // dB
+const double any = 1.0;
 /* Some parameter */
 
 int main() {
@@ -78,4 +80,10 @@ int main() {
     peakFilter->peakProcess(signal->t_inputSignal, signal->t_outputSignal[6]); // please notice that here I used peakProcess(), not process()!
     signal->writeSignal(signal->t_outputSignal[6], TestFiles::Output6);
     signal->createSoundSignal(signal->t_outputSignal[6], SoundTestFiles::Output6);
+
+    unique_ptr<Filter::BiquadFilter> biquadFilter(new Filter::BiquadFilter(SAMP_FREQ));
+    biquadFilter->setParameters(Type::HighPass, CUTOFF_FREQ, Q_FACTOR, any);
+    biquadFilter->process(signal->t_inputSignal, signal->t_outputSignal[7]);
+    signal->writeSignal(signal->t_outputSignal[7], TestFiles::Output7);
+    signal->createSoundSignal(signal->t_outputSignal[7], SoundTestFiles::Output7);
 }

@@ -7,11 +7,12 @@ fs = 44100  # sampling rate
 files = [
     ("inputSignal.txt", "Input Signal 1"),
     ("outputSignal_1.txt", "Output Signal 1"),
-    ("outputSignal_2.txt", "Output Signal 2"),
-    ("outputSignal_3.txt", "Output Signal 3"),
-    ("outputSignal_4.txt", "Output Signal 4"),
+    # ("outputSignal_2.txt", "Output Signal 2"),
+    # ("outputSignal_3.txt", "Output Signal 3"),
+    # ("outputSignal_4.txt", "Output Signal 4"),
     ("outputSignal_5.txt", "Output Signal 5"),
     ("outputSignal_6.txt", "Output Signal 6"),
+    ("outputSignal_7.txt", "Output Signal 7"),
 ]
 
 plt.figure(figsize=(14, 10))

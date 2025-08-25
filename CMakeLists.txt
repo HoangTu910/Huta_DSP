@@ -17,6 +17,7 @@ set(SOURCES
     src/module/StateVariableFilter.cpp
     src/module/ShelvingFilter.cpp
     src/module/PeakFilter.cpp
+    src/module/BiquadFilter.cpp
 )
 
 add_executable(huta_dsp ${SOURCES})
