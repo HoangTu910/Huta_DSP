@@ -19,20 +19,20 @@ void Filter::BiquadFilter::recalculateCoefficients()
     /*
         Pass-through coefficient
     */
-    double b0 = 1.0, b1 = 0.0, b2 = 0.0;
-    double a0 = 1.0, a1 = 0.0, a2 = 0.0;
+    double b0 = N1_F, b1 = N0_F, b2 = N0_F;
+    double a0 = N1_F, a1 = N0_F, a2 = N0_F;
 
-    const double A = std::pow(10, m_gaindB / 40.0);
-    const double V = std::pow(10.0, m_gaindB / 20.0);
+    const double A = std::pow(N10_F, m_gaindB / N40_F);
+    const double V = std::pow(N10_F, m_gaindB / N20_F);
 
     hu_debug(m_fc/m_fs);
     
-    double omega = 2 * PI_DOUBLE * ((m_fc + 0.0)/(m_fs + 0.0));
+    double omega = N2_F * PI_DOUBLE * ((m_fc + N0_F)/(m_fs + N0_F));
     double sinOmega = std::sin(omega);
     double cosOmega = std::cos(omega);
-    double alphaQ = sinOmega / (2.0 * m_q);
-    double alphaBW = sinOmega * std::sinh((log(2) / 2.0) * m_q * ((omega + 0.0) / (sinOmega + 0.0)));
-    double alphaS = (sinOmega / 2.0) * std::sqrt((A + 1.0 / A) * (1.0 / m_shelfSlope - 1) + 2);
+    double alphaQ = sinOmega / (N2_F * m_q);
+    double alphaBW = sinOmega * std::sinh((log(2) / N2_F) * m_q * ((omega + N0_F) / (sinOmega + N0_F)));
+    double alphaS = (sinOmega / N2_F) * std::sqrt((A + N1_F / A) * (N1_F / m_shelfSlope - N1_F) + N2_F);
 
     hu_debug(omega);
     hu_debug(cosOmega);

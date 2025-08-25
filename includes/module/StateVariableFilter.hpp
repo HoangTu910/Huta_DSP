@@ -7,6 +7,7 @@
 
 #include "../interface/IFilter.hpp"
 #include "../common/debug.hpp"
+#include "../dsp_math/common.hpp"
 #include "../common/filterType.hpp"
 #include "../dsp_math/QNumber.hpp"
 #include <iostream>
@@ -25,12 +26,12 @@ class StateVariableFilter : public IFilter {
 public:
     StateVariableFilter(int fs) {
         m_fs = fs;
-        m_yl0 = 0;
-        m_yb0 = 0;
-        m_yh0 = 0;
-        m_yl1 = 0;
-        m_yb1 = 0;
-        m_yh1 = 0;
+        m_yl0 = N0_F;
+        m_yb0 = N0_F;
+        m_yh0 = N0_F;
+        m_yl1 = N0_F;
+        m_yb1 = N0_F;
+        m_yh1 = N0_F;
     };
     void tuning(int fc, double Q);
     int process(int input) override;

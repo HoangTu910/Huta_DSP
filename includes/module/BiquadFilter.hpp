@@ -9,6 +9,7 @@
 #include "../common/debug.hpp"
 #include "../common/filterType.hpp"
 #include "../dsp_math/QNumber.hpp"
+#include "../dsp_math/common.hpp"
 #include "CanonicalFilter.hpp"
 #include <iostream>
 #include <vector>
@@ -21,17 +22,17 @@ class BiquadFilter : public CanonicalFilter {
 public:
     BiquadFilter(int fs) : CanonicalFilter(fs) {
         m_fs = fs;
-        m_shelfSlope = 1.0; // standard
+        m_shelfSlope = N1_F; // standard
         hu_debug(m_fs);
-        m_xh1 = 0;
-        m_xh2 = 0;
-        m_b0 = 0;
-        m_b1 = 0;
-        m_b2 = 0;
-        m_a1 = 0;
-        m_a2 = 0;
-        m_K = 0;
-        m_fc = 0;
+        m_xh1 = N0_F;
+        m_xh2 = N0_F;
+        m_b0 = N0_F;
+        m_b1 = N0_F;
+        m_b2 = N0_F;
+        m_a1 = N0_F;
+        m_a2 = N0_F;
+        m_K = N0_F;
+        m_fc = N0_F;
     };
 
     /**
@@ -45,8 +46,8 @@ public:
     void setShelfSlope(double shelfSlope);
 
 private:
-    double m_gaindB {0.0}, m_shelfSlope;
-    double m_q {0.707};
+    double m_gaindB {N0_F}, m_shelfSlope;
+    double m_q {COMMON_Q_FACTOR};
     Type m_type {Type::LowPass};
     void recalculateCoefficients();
 };

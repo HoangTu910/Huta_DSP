@@ -19,7 +19,7 @@ using namespace std;
 
 /* Some parameter */
 const int SAMP_FREQ = 44100; 
-const int CUTOFF_FREQ = 200;
+const int CUTOFF_FREQ = 300;
 const int CENTER_FREQ = 800;
 const double Q_FACTOR = 0.707;
 const int SIGNAL_DURATION = 2;
@@ -82,7 +82,7 @@ int main() {
     signal->createSoundSignal(signal->t_outputSignal[6], SoundTestFiles::Output6);
 
     unique_ptr<Filter::BiquadFilter> biquadFilter(new Filter::BiquadFilter(SAMP_FREQ));
-    biquadFilter->setParameters(Type::HighPass, CUTOFF_FREQ, Q_FACTOR, any);
+    biquadFilter->setParameters(Type::LowShelf, CUTOFF_FREQ, Q_FACTOR, GAIN_FACTOR);
     biquadFilter->process(signal->t_inputSignal, signal->t_outputSignal[7]);
     signal->writeSignal(signal->t_outputSignal[7], TestFiles::Output7);
     signal->createSoundSignal(signal->t_outputSignal[7], SoundTestFiles::Output7);

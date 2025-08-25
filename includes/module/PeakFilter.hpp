@@ -9,6 +9,7 @@
 #include "../interface/IFilter.hpp"
 #include "../common/debug.hpp"
 #include "../common/filterType.hpp"
+#include "../dsp_math/common.hpp"
 #include "../dsp_math/QNumber.hpp"
 #include <iostream>
 #include <vector>
@@ -22,16 +23,16 @@ public:
     PeakFilter(int fs) : CanonicalFilter(fs) {
         m_fs = fs;
         hu_debug(m_fs);
-        m_xh1 = 0;
-        m_xh2 = 0;
-        m_b0 = 0;
-        m_b1 = 0;
-        m_b2 = 0;
-        m_a1 = 0;
-        m_a2 = 0;
-        m_K = 0;
-        m_fc = 0;
-        m_G = 0;
+        m_xh1 = N0_F;
+        m_xh2 = N0_F;
+        m_b0 = N0_F;
+        m_b1 = N0_F;
+        m_b2 = N0_F;
+        m_a1 = N0_F;
+        m_a2 = N0_F;
+        m_K = N0_F;
+        m_fc = N0_F;
+        m_G = N0_F;
     };
     /*
         In peak filter, you can either choose canonical implement or using direct difference equations
