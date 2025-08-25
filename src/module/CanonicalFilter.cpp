@@ -10,7 +10,7 @@ void Filter::CanonicalFilter::setType(int type, int fc, double Q)
     double m_K_d = tan(div_d);
     double K_square_d = m_K_d * m_K_d;
 
-    double b0_val = 0.0, b1_val = 0.0, b2_val = 0.0, a1_val = 0.0, a2_val = 0.0;
+    double b0_val = N0_F, b1_val = N0_F, b2_val = N0_F, a1_val = N0_F, a2_val = N0_F;
 
     /*
      * All the formulas were used from DAFX-Digital Audio Effects book - Chapter 2
@@ -21,34 +21,34 @@ void Filter::CanonicalFilter::setType(int type, int fc, double Q)
     switch (type)
     {
     case LOW_PASS_1:
-        b0_val = m_K_d / (m_K_d + 1.0);
+        b0_val = m_K_d / (m_K_d + N1_F);
         b1_val = b0_val;
-        a1_val = (m_K_d - 1.0) / (m_K_d + 1.0);
-        b2_val = 0.0;
-        a2_val = 0.0;
+        a1_val = (m_K_d - N1_F) / (m_K_d + N1_F);
+        b2_val = N0_F;
+        a2_val = N0_F;
         break;
     case HIGH_PASS_1:
-        b0_val = 1.0 / (m_K_d + 1.0);
-        b1_val = -1.0 / (m_K_d + 1.0);
-        a1_val = (m_K_d - 1.0) / (m_K_d + 1.0);
-        b2_val = 0.0;
-        a2_val = 0.0;
+        b0_val = N1_F / (m_K_d + N1_F);
+        b1_val = -N1_F / (m_K_d + N1_F);
+        a1_val = (m_K_d - N1_F) / (m_K_d + N1_F);
+        b2_val = N0_F;
+        a2_val = N0_F;
         break;
     case ALL_PASS_1:
-        b0_val = (m_K_d - 1.0) / (m_K_d + 1.0);
-        b1_val = 1.0;
-        a1_val = (m_K_d - 1.0) / (m_K_d + 1.0);
-        b2_val = 0.0;
-        a2_val = 0.0;
+        b0_val = (m_K_d - N1_F) / (m_K_d + N1_F);
+        b1_val = N1_F;
+        a1_val = (m_K_d - N1_F) / (m_K_d + N1_F);
+        b2_val = N0_F;
+        a2_val = N0_F;
         break;
     case LOW_PASS_2:
     {
         double K2_Q_d = K_square_d * Q_d;
         double det_d = K2_Q_d + m_K_d + Q_d;
         b0_val = K2_Q_d / det_d;
-        b1_val = 2.0 * K2_Q_d / det_d;
+        b1_val = N2_F * K2_Q_d / det_d;
         b2_val = b0_val;
-        a1_val = 2.0 * Q_d * (K_square_d - 1.0) / det_d;
+        a1_val = N2_F * Q_d * (K_square_d - N1_F) / det_d;
         a2_val = (K2_Q_d - m_K_d + Q_d) / det_d;
     }
     break;
@@ -57,9 +57,9 @@ void Filter::CanonicalFilter::setType(int type, int fc, double Q)
         double K2_Q_d = K_square_d * Q_d;
         double det_d = K2_Q_d + m_K_d + Q_d;
         b0_val = Q_d / det_d;
-        b1_val = -2.0 * Q_d / det_d;
+        b1_val = -N2_F * Q_d / det_d;
         b2_val = b0_val;
-        a1_val = 2.0 * Q_d * (K_square_d - 1.0) / det_d;
+        a1_val = N2_F * Q_d * (K_square_d - N1_F) / det_d;
         a2_val = (K2_Q_d - m_K_d + Q_d) / det_d;
     }
     break;
@@ -67,19 +67,19 @@ void Filter::CanonicalFilter::setType(int type, int fc, double Q)
     {
         double det_d = K_square_d * Q_d + m_K_d + Q_d;
         b0_val = m_K_d / det_d;
-        b1_val = 0.0;
+        b1_val = N0_F;
         b2_val = -m_K_d / det_d;
-        a1_val = 2.0 * Q_d * (K_square_d - 1.0) / det_d;
+        a1_val = N2_F * Q_d * (K_square_d - N1_F) / det_d;
         a2_val = (K_square_d * Q_d - m_K_d + Q_d) / det_d;
     }
     break;
     case BAND_REJECT_2:
     {
         double det_d = K_square_d * Q_d + m_K_d + Q_d;
-        b0_val = Q_d * (1.0 + K_square_d) / det_d;
-        b1_val = 2.0 * Q_d * (K_square_d - 1.0) / det_d;
+        b0_val = Q_d * (N1_F + K_square_d) / det_d;
+        b1_val = N2_F * Q_d * (K_square_d - N1_F) / det_d;
         b2_val = b0_val;
-        a1_val = 2.0 * Q_d * (K_square_d - 1.0) / det_d;
+        a1_val = N2_F * Q_d * (K_square_d - N1_F) / det_d;
         a2_val = (K_square_d * Q_d - m_K_d + Q_d) / det_d;
     }
     break;
@@ -87,9 +87,9 @@ void Filter::CanonicalFilter::setType(int type, int fc, double Q)
     {
         double det_d = K_square_d * Q_d + m_K_d + Q_d;
         b0_val = (K_square_d * Q_d - m_K_d + Q_d) / det_d;
-        b1_val = 2.0 * Q_d * (K_square_d - 1.0) / det_d;
-        b2_val = 1.0;
-        a1_val = 2.0 * Q_d * (K_square_d - 1.0) / det_d;
+        b1_val = N2_F * Q_d * (K_square_d - N1_F) / det_d;
+        b2_val = N1_F;
+        a1_val = N2_F * Q_d * (K_square_d - N1_F) / det_d;
         a2_val = (K_square_d * Q_d - m_K_d + Q_d) / det_d;
     }
     break;
@@ -162,4 +162,11 @@ void Filter::CanonicalFilter::normalize(std::vector<double>& coeff)
     
     m_gain = (scale > 0.0) ? (1.0 / scale) : 1.0;
 }
+
+// Parameter accessors
+int Filter::CanonicalFilter::getFc() const { return m_fc; }
+void Filter::CanonicalFilter::setFc(int fc) { m_fc = fc; }
+double Filter::CanonicalFilter::getGain() const { return m_gain; }
+void Filter::CanonicalFilter::setGain(double gain) { m_gain = gain; }
+
 

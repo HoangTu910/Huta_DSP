@@ -24,15 +24,15 @@ public:
         m_fs = fs;
         m_shelfSlope = N1_F; // standard
         hu_debug(m_fs);
-        m_xh1 = N0_F;
-        m_xh2 = N0_F;
-        m_b0 = N0_F;
-        m_b1 = N0_F;
-        m_b2 = N0_F;
-        m_a1 = N0_F;
-        m_a2 = N0_F;
-        m_K = N0_F;
-        m_fc = N0_F;
+        m_xh1 = 0;
+        m_xh2 = 0;
+        m_b0 = 0;
+        m_b1 = 0;
+        m_b2 = 0;
+        m_a1 = 0;
+        m_a2 = 0;
+        m_K = 0;
+        m_fc = 0;
     };
 
     /**
@@ -42,8 +42,16 @@ public:
         S: shelf slope
         @attention: the gainDb only use for peak and shelving filter, if you use other type, you can set gainDb whatever you want
      */
-    void setParameters(Type type, double frequencyHz, double q, double gainDb) noexcept;
+    void setParameters(Type type, int frequencyHz, double q, double gainDb) noexcept;
     void setShelfSlope(double shelfSlope);
+    
+    // Parameter accessors
+    double getFrequencyHz() const;
+    void setFrequencyHz(int frequencyHz);
+    double getQ() const;
+    void setQ(double q);
+    double getGainDb() const;
+    void setGainDb(double gainDb);
 
 private:
     double m_gaindB {N0_F}, m_shelfSlope;

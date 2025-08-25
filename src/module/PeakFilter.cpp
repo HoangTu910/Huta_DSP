@@ -8,33 +8,33 @@ void Filter::PeakFilter::setType(int type, int fc, double G, double Q) {
     }
 
     double G_d = G;
-    double V0_d = pow(10.0, G_d / 20.0);
-    double d_d = -cos((2 * PI_DOUBLE * fc) / static_cast<double>(m_fs));
-    double H0_d = V0_d - 1;
-    double cB_d = (tan((M_PI * fc) / static_cast<double>(m_fs)) - 1)/(tan((M_PI * fc) / static_cast<double>(m_fs)) + 1);
+    double V0_d = pow(N10_F, G_d / N20_F);
+    double d_d = -cos((N2_F * PI_DOUBLE * fc) / static_cast<double>(m_fs));
+    double H0_d = V0_d - N1_F;
+    double cB_d = (tan((M_PI * fc) / static_cast<double>(m_fs)) - N1_F)/(tan((M_PI * fc) / static_cast<double>(m_fs)) + N1_F);
     double cC_d = (tan((M_PI * fc) / static_cast<double>(m_fs)) - V0_d)/(tan((M_PI * fc) / static_cast<double>(m_fs)) + V0_d);
     double K_d = tan((M_PI * fc) / static_cast<double>(m_fs));
     double K_square_d = K_d * K_d;
-    double b0_val = 0.0, b1_val = 0.0, b2_val = 0.0, a1_val = 0.0, a2_val = 0.0;
-    double det = 0.0;
+    double b0_val = N0_F, b1_val = N0_F, b2_val = N0_F, a1_val = N0_F, a2_val = N0_F;
+    double det = N0_F;
 
     switch(type) {
         case CANONICAL_BOOST_MODE: {
-            det = 1.0 + (1.0 / Q) * K_d + K_square_d;
-            b0_val = (1.0 + (V0_d / Q) * K_d + K_square_d) / det;
-            b1_val = (2.0 * (K_square_d - 1.0)) / det;
-            b2_val = (1.0 - (V0_d / Q) * K_d + K_square_d) / det;
-            a1_val = (2.0 * (K_square_d - 1.0)) / det;
-            a2_val = (1.0 - (1.0 / Q) * K_d + K_square_d) / det;
+            det = N1_F + (N1_F / Q) * K_d + K_square_d;
+            b0_val = (N1_F + (V0_d / Q) * K_d + K_square_d) / det;
+            b1_val = (N2_F * (K_square_d - N1_F)) / det;
+            b2_val = (N1_F - (V0_d / Q) * K_d + K_square_d) / det;
+            a1_val = (N2_F * (K_square_d - N1_F)) / det;
+            a2_val = (N1_F - (N1_F / Q) * K_d + K_square_d) / det;
             break;
         }
         case CANONICAL_CUT_MODE: {
-            det = 1.0 + (1.0 / (V0_d * Q)) * K_d + K_square_d;
-            b0_val = (1.0 + (1.0 / Q) * K_d + K_square_d) / det;
-            b1_val = (2.0 * (K_square_d - 1.0)) / det;
-            b2_val = (1.0 - (1.0 / Q) * K_d + K_square_d) / det;
-            a1_val = (2.0 * (K_square_d - 1.0)) / det;
-            a2_val = (1.0 - (1.0 / (V0_d * Q)) * K_d + K_square_d) / det;
+            det = N1_F + (N1_F / (V0_d * Q)) * K_d + K_square_d;
+            b0_val = (N1_F + (N1_F / Q) * K_d + K_square_d) / det;
+            b1_val = (N2_F * (K_square_d - N1_F)) / det;
+            b2_val = (N1_F - (N1_F / Q) * K_d + K_square_d) / det;
+            a1_val = (N2_F * (K_square_d - N1_F)) / det;
+            a2_val = (N1_F - (N1_F / (V0_d * Q)) * K_d + K_square_d) / det;
             break;
         }
         case PEAK_BOOST_MODE: {

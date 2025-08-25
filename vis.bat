@@ -1,9 +1,7 @@
 @echo off
 
-set SOURCE=%~dp0build\Debug
 set DEST=%~dp0visualize
 
-copy "%SOURCE%\*.txt" "%DEST%\"
+copy "*.txt" "%DEST%\"
 
 echo Go to %DEST% to see the signal visualization.
-pause

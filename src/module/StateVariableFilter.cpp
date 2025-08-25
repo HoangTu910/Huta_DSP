@@ -14,8 +14,8 @@ void Filter::StateVariableFilter::tuning(int fc, double Q)
     double div_d = pi_fc_d / static_cast<double>(m_fs);
     double sin_d = sin(div_d);
 
-    double F1_d = 2.0 * sin(div_d); 
-    double Q1_d = 1.0 / Q_d;
+    double F1_d = N2_F * sin(div_d); 
+    double Q1_d = N1_F / Q_d;
 
     m_fc = fc;
     m_F1 = DSP_MATH::float_to_q16_15(F1_d);

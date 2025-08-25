@@ -22,20 +22,26 @@ public:
     CanonicalFilter(int fs) {
         m_fs = fs;
         hu_debug(m_fs);
-        m_xh1 = N0_F;
-        m_xh2 = N0_F;
-        m_b0 = N0_F;
-        m_b1 = N0_F;
-        m_b2 = N0_F;
-        m_a1 = N0_F;
-        m_a2 = N0_F;
-        m_K = N0_F;
-        m_fc = N0_F;
+        m_xh1 = 0;
+        m_xh2 = 0;
+        m_b0 = 0;
+        m_b1 = 0;
+        m_b2 = 0;
+        m_a1 = 0;
+        m_a2 = 0;
+        m_K = 0;
+        m_fc = 0;
     };
     virtual void setType(int type, int fc, double factor); //fc can be f_center or f_cut based on L-HP or B-P
     int process(int input) override;
     void process(std::vector<double> &inputSignal, std::vector<int> &outputSignal) override;
     void normalize(std::vector<double> &coeff) override;
+
+    // Parameter accessors
+    int getFc() const;
+    double getGain() const;
+    void setFc(int fc);
+    void setGain(double gain);
 
 protected:
     int m_fs, m_fc;
@@ -48,3 +54,4 @@ protected:
 };
 
 #endif
+    
