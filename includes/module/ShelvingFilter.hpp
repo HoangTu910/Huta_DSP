@@ -30,6 +30,7 @@ public:
         m_fc = 0;
     }
     void setType(int type, int fc, double factor) override; //G is gain instead of Q
+    void setSampleFreq(int fs);
 };
 }
 

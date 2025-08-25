@@ -42,6 +42,7 @@ public:
     virtual void setType(int type, int fc, double G, double Q); 
     void peakProcess(std::vector<double> &inputSignal, std::vector<int> &h_outputSignal);
     int peakProcess(int input);
+    void setSampleFreq(int fs);
 
 protected:
     /* m_ in Q format */

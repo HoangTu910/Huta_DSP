@@ -23,6 +23,18 @@
 const double PI_DOUBLE = 3.14159265358979323846;
 const int SCALE_FACTOR = 2;
 
+enum class Type {
+    LowPass,
+    HighPass,
+    BandPass_Q,
+    BandPass_Constant,
+    Notch, // aka band-stop
+    AllPass,
+    Peaking,
+    LowShelf,
+    HighShelf
+};
+
 /* I defined 10 files for signal testing, you can increase it if needed ^^ */
 
 namespace TestFiles {

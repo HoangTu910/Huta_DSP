@@ -152,6 +152,11 @@ void Filter::CanonicalFilter::normalize(std::vector<double>& coeff)
     m_b1 = DSP_MATH::float_to_q16_15(coeff[1] * scale);
     m_b2 = DSP_MATH::float_to_q16_15(coeff[2] * scale);
 
+    /*
+        Notice that the a coefficients (coeff[3] and coeff[4]) are NOT scaled. 
+        Scaling the feedback coefficients would move the filter's poles, completely changing its frequency response (its shape). 
+        The gain is managed only by the feedforward path.
+    */
     m_a1 = DSP_MATH::float_to_q16_15(coeff[3]);
     m_a2 = DSP_MATH::float_to_q16_15(coeff[4]);
     

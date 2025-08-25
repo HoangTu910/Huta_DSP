@@ -115,3 +115,7 @@ void Filter::PeakFilter::peakProcess(std::vector<double> &inputSignal, std::vect
         hu_alert("It still work but may be wrong co-efficient!");
     }
 }
+
+void Filter::PeakFilter::setSampleFreq(int fs) {
+    m_fs = fs;
+}

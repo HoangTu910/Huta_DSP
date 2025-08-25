@@ -73,3 +73,7 @@ void Filter::ShelvingFilter::setType(int type, int fc, double G)
     hu_debug(m_b2);
     hu_debug(m_gain);
 }
+
+void Filter::ShelvingFilter::setSampleFreq(int fs) {
+    m_fs = fs;
+}

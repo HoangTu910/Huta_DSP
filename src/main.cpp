@@ -72,6 +72,8 @@ int main() {
 
     /* Peak testing */
     unique_ptr<Filter::PeakFilter> peakFilter(new Filter::PeakFilter(SAMP_FREQ));
+
+    /* The set type in peak filter allow you to choose between Canonical implement or direct different equation implement */
     peakFilter->setType(PEAK_BOOST_MODE, CUTOFF_FREQ, GAIN_FACTOR, Q_FACTOR);
     peakFilter->peakProcess(signal->t_inputSignal, signal->t_outputSignal[6]); // please notice that here I used peakProcess(), not process()!
     signal->writeSignal(signal->t_outputSignal[6], TestFiles::Output6);
