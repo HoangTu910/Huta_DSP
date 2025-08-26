@@ -1,28 +1,28 @@
 #include "../../includes/module/ParametricEqualizer.hpp"
 
-void Equalizer::ParametricEqualizer::setLowShelf(int type, int fc, double factor)
+void Equalizer::ParametricEqualizer::setLowShelf(int fc, double factor)
 {
-    m_lowShelf->setType(type, fc, factor);
+    m_lowShelf->setParameters(Type::LowShelf, fc, factor, 0);
 }
 
-void Equalizer::ParametricEqualizer::setHighShelf(int type, int fc, double factor)
+void Equalizer::ParametricEqualizer::setHighShelf(int fc, double factor)
 {
-    m_highShelf->setType(type, fc, factor);
+    m_lowShelf->setParameters(Type::HighShelf, fc, factor, 0);
 }
 
-void Equalizer::ParametricEqualizer::setFirstMidPeak(int type, int fc, double G, double Q)
+void Equalizer::ParametricEqualizer::setFirstMidPeak(int fc, double G, double Q)
 {
-    m_firstMidPeak->setType(type, fc, G, Q);
+    m_firstMidPeak->setParameters(Type::Peaking, fc, Q, G);
 }
 
-void Equalizer::ParametricEqualizer::setSecondMidPeak(int type, int fc, double G, double Q)
+void Equalizer::ParametricEqualizer::setSecondMidPeak(int fc, double G, double Q)
 {
-    m_secondMidPeak->setType(type, fc, G, Q);
+    m_secondMidPeak->setParameters(Type::Peaking, fc, Q, G);
 }
 
 int Equalizer::ParametricEqualizer::process(int sample) {
-    int outputLowShefl = m_lowShelf->process(sample);
-    int outputFirstMidPeak = m_firstMidPeak->process(outputLowShefl);
+    int outputLowShelf = m_lowShelf->process(sample);
+    int outputFirstMidPeak = m_firstMidPeak->process(outputLowShelf);
     int outputSecondMidPeak = m_secondMidPeak->process(outputFirstMidPeak);
     int outputSample = m_highShelf->process(outputSecondMidPeak);
 

@@ -13,7 +13,7 @@ files = [
     # ("outputSignal_4.txt", "Output Signal 4"),
     ("outputSignal_5.txt", "Output Signal 5"),
     ("outputSignal_6.txt", "Output Signal 6"),
-    ("outputSignal_7.txt", "Output Signal 7"),
+    ("outputSignal_8.txt", "Output Signal 8"),
 ]
 
 plt.figure(figsize=(14, 10))
@@ -37,7 +37,8 @@ for i, (filename, label) in enumerate(files, start=1):
     plt.grid(True)
     plt.legend()
     plt.xlim(0, 2000)
-
+    
+print("Done!")
 plt.tight_layout()
 plt.savefig("spectrum.png")
 plt.show()

@@ -23,6 +23,18 @@
 const double PI_DOUBLE = 3.14159265358979323846;
 const int SCALE_FACTOR = 2;
 
+/* Some parameter */
+const int SAMP_FREQ = 44100; 
+const int CUTOFF_FREQ = 200;
+const int CENTER_FREQ = 800;
+const double Q_FACTOR = 0.707;
+const int SIGNAL_DURATION = 2;
+const double SIGNAL_AMPLITUDE = 0.06;
+const double GAIN_FACTOR = 20.0; // dB
+const double GAIN_EQUALIZER = 2.0;
+const double any = 1.0;
+/* Some parameter */
+
 enum class Type {
     LowPass,
     HighPass,

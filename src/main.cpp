@@ -11,22 +11,12 @@
 #include "../includes/module/PeakFilter.hpp"
 #include "../includes/test/Signal.hpp"
 #include "../includes/common/filterType.hpp"
+#include "../includes/module/ParametricEqualizer.hpp"
 #include <sndfile.h>
 
 #include <memory>
 
 using namespace std;
-
-/* Some parameter */
-const int SAMP_FREQ = 44100; 
-const int CUTOFF_FREQ = 200;
-const int CENTER_FREQ = 800;
-const double Q_FACTOR = 0.707;
-const int SIGNAL_DURATION = 2;
-const double SIGNAL_AMPLITUDE = 0.06;
-const double GAIN_FACTOR = 20.0; // dB
-const double any = 1.0;
-/* Some parameter */
 
 int main() {
     /* 
@@ -81,9 +71,24 @@ int main() {
     signal->writeSignal(signal->t_outputSignal[6], TestFiles::Output6);
     signal->createSoundSignal(signal->t_outputSignal[6], SoundTestFiles::Output6);
 
+    /* Biquad Testing*/
     unique_ptr<Filter::BiquadFilter> biquadFilter(new Filter::BiquadFilter(SAMP_FREQ));
     biquadFilter->setParameters(Type::LowPass, CUTOFF_FREQ, Q_FACTOR, any);
     biquadFilter->process(signal->t_inputSignal, signal->t_outputSignal[7]);
     signal->writeSignal(signal->t_outputSignal[7], TestFiles::Output7);
     signal->createSoundSignal(signal->t_outputSignal[7], SoundTestFiles::Output7);
+
+    /* Parametric Equalizer Testing*/
+    unique_ptr<Equalizer::ParametricEqualizer> parametricEqualizer(new Equalizer::ParametricEqualizer(SAMP_FREQ));
+    parametricEqualizer->setLowShelf(200, Q_FACTOR);
+    parametricEqualizer->setFirstMidPeak(300, GAIN_EQUALIZER, Q_FACTOR);
+    parametricEqualizer->setSecondMidPeak(400, GAIN_EQUALIZER, Q_FACTOR);
+    parametricEqualizer->setHighShelf(600, Q_FACTOR);
+    /*
+     *   According to coding rule, we need to return output instead of passing output as parameter
+     *   So I changed a little in process function of equalizer
+     */
+    signal->t_outputSignal[8] = parametricEqualizer->process(signal->t_inputSignal); 
+    signal->writeSignal(signal->t_outputSignal[8], TestFiles::Output8);
+    signal->createSoundSignal(signal->t_outputSignal[8], SoundTestFiles::Output8);
 }
