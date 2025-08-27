@@ -35,6 +35,7 @@ public:
     void setHighShelf(int fc, double factor);
     void setFirstMidPeak(int fc, double G, double Q);
     void setSecondMidPeak(int fc, double G, double Q);
+    void setShelfSlope(int typeShelf, float shelfSlope);
     std::vector<int> process(std::vector<double> &inputSignal);
 
 private:

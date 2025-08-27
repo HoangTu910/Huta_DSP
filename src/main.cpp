@@ -73,21 +73,28 @@ int main() {
 
     /* Biquad Testing*/
     unique_ptr<Filter::BiquadFilter> biquadFilter(new Filter::BiquadFilter(SAMP_FREQ));
-    biquadFilter->setParameters(Type::LowPass, CUTOFF_FREQ, Q_FACTOR, any);
+    biquadFilter->setParameters(Type::HighShelf, CUTOFF_FREQ, Q_FACTOR, GAIN_FACTOR);
     biquadFilter->process(signal->t_inputSignal, signal->t_outputSignal[7]);
     signal->writeSignal(signal->t_outputSignal[7], TestFiles::Output7);
     signal->createSoundSignal(signal->t_outputSignal[7], SoundTestFiles::Output7);
 
     /* Parametric Equalizer Testing*/
     unique_ptr<Equalizer::ParametricEqualizer> parametricEqualizer(new Equalizer::ParametricEqualizer(SAMP_FREQ));
-    parametricEqualizer->setLowShelf(200, Q_FACTOR);
+
+   /*
+    * The shelf slope = 1.0 by default
+    * You can change the shelf slope by calling  parametricEqualizer->setShelfSlope(which, any);
+    */
+    parametricEqualizer->setShelfSlope(HIGH_SHELF, 2);
+    parametricEqualizer->setLowShelf(200, GAIN_EQUALIZER);
     parametricEqualizer->setFirstMidPeak(300, GAIN_EQUALIZER, Q_FACTOR);
     parametricEqualizer->setSecondMidPeak(400, GAIN_EQUALIZER, Q_FACTOR);
-    parametricEqualizer->setHighShelf(600, Q_FACTOR);
+    parametricEqualizer->setHighShelf(600, GAIN_EQUALIZER);
     /*
      *   According to coding rule, we need to return output instead of passing output as parameter
      *   So I changed a little in process function of equalizer
      */
+    hu_debug(signal->t_inputSignal[10]);
     signal->t_outputSignal[8] = parametricEqualizer->process(signal->t_inputSignal); 
     signal->writeSignal(signal->t_outputSignal[8], TestFiles::Output8);
     signal->createSoundSignal(signal->t_outputSignal[8], SoundTestFiles::Output8);

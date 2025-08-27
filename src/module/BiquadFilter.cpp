@@ -26,7 +26,7 @@ void Filter::BiquadFilter::recalculateCoefficients()
     const double V = std::pow(N10_F, m_gaindB / N20_F);
 
     hu_debug(m_fc/m_fs);
-    
+    hu_debug(m_shelfSlope);
     double omega = N2_F * PI_DOUBLE * ((m_fc + N0_F)/(m_fs + N0_F));
     double sinOmega = std::sin(omega);
     double cosOmega = std::cos(omega);
@@ -37,6 +37,7 @@ void Filter::BiquadFilter::recalculateCoefficients()
     hu_debug(omega);
     hu_debug(cosOmega);
     hu_debug(sinOmega);
+    hu_debug(alphaS);
 
     switch(m_type) {
         case Type::LowPass:

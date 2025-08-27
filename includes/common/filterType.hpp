@@ -20,6 +20,9 @@
 #define PEAK_BOOST_MODE 16
 #define PEAK_CUT_MODE 17
 
+#define HIGH_SHELF 123
+#define LOW_SHELF 321
+
 const double PI_DOUBLE = 3.14159265358979323846;
 const int SCALE_FACTOR = 2;
 

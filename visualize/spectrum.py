@@ -12,7 +12,7 @@ files = [
     # ("outputSignal_3.txt", "Output Signal 3"),
     # ("outputSignal_4.txt", "Output Signal 4"),
     ("outputSignal_5.txt", "Output Signal 5"),
-    ("outputSignal_6.txt", "Output Signal 6"),
+    ("outputSignal_7.txt", "Output Signal 7"),
     ("outputSignal_8.txt", "Output Signal 8"),
 ]
 
