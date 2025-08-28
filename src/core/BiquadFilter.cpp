@@ -1,4 +1,4 @@
-#include "../../includes/module/BiquadFilter.hpp"
+#include "../../includes/core/BiquadFilter.hpp"
 
 void Filter::BiquadFilter::setParameters(Type type, int frequencyHz, double q, double gainDb) noexcept
 {

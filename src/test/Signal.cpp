@@ -1,5 +1,5 @@
 #include "../../includes/test/Signal.hpp"
-#include "../../includes/module/CanonicalFilter.hpp"
+#include "../../includes/core/CanonicalFilter.hpp"
 
 void Signal::generateTestSignal(std::vector<double> &signal, int samp_freq, int duration, int amplitude)
 {

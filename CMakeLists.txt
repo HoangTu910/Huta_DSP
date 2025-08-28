@@ -10,15 +10,17 @@ include_directories(${CMAKE_SOURCE_DIR}/includes)
 # Source files
 set(SOURCES
     src/main.cpp
-    src/module/CanonicalFilter.cpp
+    src/core/CanonicalFilter.cpp
     src/interface/IFilter.cpp
     src/test/Signal.cpp
     src/dsp_math/QNumber.cpp  
-    src/module/StateVariableFilter.cpp
-    src/module/ShelvingFilter.cpp
-    src/module/PeakFilter.cpp
-    src/module/BiquadFilter.cpp
-    src/module/ParametricEqualizer.cpp
+    src/core/StateVariableFilter.cpp
+    src/core/ShelvingFilter.cpp
+    src/core/PeakFilter.cpp
+    src/core/BiquadFilter.cpp
+    src/core/ParametricEqualizer.cpp
+    src/modules/ToneControl.cpp
+    src/test/TestObject.cpp
 )
 
 add_executable(huta_dsp ${SOURCES})

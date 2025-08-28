@@ -1,4 +1,4 @@
-#include "../../includes/module/CanonicalFilter.hpp"
+#include "../../includes/core/CanonicalFilter.hpp"
 
 void Filter::CanonicalFilter::setType(int type, int fc, double Q)
 {

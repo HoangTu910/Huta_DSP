@@ -1,4 +1,4 @@
-#include "../../includes/module/ParametricEqualizer.hpp"
+#include "../../includes/core/ParametricEqualizer.hpp"
 #define HUDEBUG
 
 void Equalizer::ParametricEqualizer::setLowShelf(int fc, double factor)

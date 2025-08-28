@@ -1,4 +1,4 @@
-#include "../../includes/module/ShelvingFilter.hpp"
+#include "../../includes/core/ShelvingFilter.hpp"
 
 void Filter::ShelvingFilter::setType(int type, int fc, double G)
 {

@@ -10,7 +10,7 @@
 #include "../common/filterType.hpp"
 #include "../dsp_math/QNumber.hpp"
 #include "../dsp_math/common.hpp"
-#include "../module/BiquadFilter.hpp"
+#include "../core/BiquadFilter.hpp"
 #include "PeakFilter.hpp"
 #include "ShelvingFilter.hpp"
 #include <iostream>

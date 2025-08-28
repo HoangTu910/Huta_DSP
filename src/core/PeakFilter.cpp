@@ -1,4 +1,4 @@
-#include "../../includes/module/PeakFilter.hpp"
+#include "../../includes/core/PeakFilter.hpp"
 
 void Filter::PeakFilter::setType(int type, int fc, double G, double Q) {
     m_type = type;

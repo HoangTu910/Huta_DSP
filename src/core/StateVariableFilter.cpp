@@ -1,4 +1,4 @@
-#include "../../includes/module/StateVariableFilter.hpp"
+#include "../../includes/core/StateVariableFilter.hpp"
 
 void Filter::StateVariableFilter::tuning(int fc, double Q)
 {
