@@ -31,7 +31,41 @@ void Module::ToneControl::setShelfSlope(int typeShelf, float shelfSlope)
 
 void Module::ToneControl::configuration(const ToneControlParams *bass, const ToneControlParams *mid, const ToneControlParams *treble)
 {
-    m_bassFilter->setParameters(Type::LowShelf, bass->freq, bass->Q, bass->gain);
-    m_midFilter->setParameters(Type::Peaking, mid->freq, mid->Q, mid->gain);
-    m_trebleFilter->setParameters(Type::HighShelf, treble->freq, treble->Q, treble->gain);
+    /*
+     * Gain will be set to 0 (flat) when init configuration 
+     */
+    m_bassFilter->setParameters(Type::LowShelf, bass->freq, bass->Q, N0_F);
+    m_midFilter->setParameters(Type::Peaking, mid->freq, mid->Q, N0_F);
+    m_trebleFilter->setParameters(Type::HighShelf, treble->freq, treble->Q, N0_F);
 }
+
+int Module::ToneControl::process(int sample) {
+    int outputLowShelf = m_bassFilter->process(sample);
+    int outputMidPeak = m_midFilter->process(outputLowShelf);
+    int outputSample = m_trebleFilter->process(outputMidPeak);
+    
+    #ifdef HUDEBUG
+    if(check && cnt == 10) {
+        hu_debug(cnt);
+        hu_debug(sample);
+        hu_debug(outputLowShelf);
+        hu_debug(outputFirstMidPeak);
+        hu_debug(outputSecondMidPeak);
+        hu_debug(outputSample);
+        check = false;
+    }
+    #endif
+
+    return outputSample;
+}
+
+std::vector<int> Module::ToneControl::process(std::vector<double> &inputSignal) {
+    std::vector<int> outputSignal;
+    for(double sample : inputSignal) {
+        int q_sample = DSP_MATH::float_to_q16_15(sample);
+        outputSignal.push_back(process(q_sample));
+    }
+
+    return outputSignal;
+}
+

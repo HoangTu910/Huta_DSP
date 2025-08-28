@@ -36,11 +36,11 @@ public:
         m_midFilter = std::make_unique<Filter::BiquadFilter>(fs);
     };
 
-    void setBassGain(int fc, double factor);
-    void setTrebleGain(int fc, double factor);
-    void setMidGain(int fc, double G, double Q);
+    void setBassFilter(int fc, double factor);
+    void setTrebleFilter(int fc, double factor);
+    void setMidFilter(int fc, double G, double Q);
     void setShelfSlope(int typeShelf, float shelfSlope);
-    void configuration(ToneControlParams bass, ToneControlParams mid, ToneControlParams treble);
+    void configuration(const ToneControlParams *bass, const ToneControlParams *mid, const ToneControlParams *treble);
     std::vector<int> process(std::vector<double> &inputSignal);
 
 private:
