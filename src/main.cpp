@@ -14,7 +14,6 @@
 #include "../includes/core/ParametricEqualizer.hpp"
 #include "../includes/test/TestObject.hpp"
 #include <sndfile.h>
-
 #include <memory>
 
 using namespace std;
