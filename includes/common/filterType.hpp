@@ -38,6 +38,9 @@ const double GAIN_EQUALIZER = 2.0;
 const double any = 1.0;
 /* Some parameter */
 
+const int BASS_LOUDNESS_COMPENSATION = 150;
+const int TREBLE_LOUDNESS_COMPENSATION = 150;
+
 enum class Type {
     LowPass,
     HighPass,
