@@ -13,13 +13,22 @@
 #include "../includes/common/filterType.hpp"
 #include "../includes/core/ParametricEqualizer.hpp"
 #include "../includes/test/TestObject.hpp"
+#include "../gui/includes/MainWindow.hpp"
 #include <sndfile.h>
 #include <memory>
+#include <QApplication>
 
 using namespace std;
 
-int main() {
-    /* Run all the core implementations, log debug, check the correctness */
+int main(int argc, char *argv[]) {
+    QApplication app(argc, argv);
+
     unique_ptr<Test::TestObject> pTest(new Test::TestObject());
     pTest->runAllCoreProcessing();
+
+    std::cout << "Running Application...\n";
+    MainWindow mainWindow;
+    mainWindow.show();
+
+    return app.exec();
 }

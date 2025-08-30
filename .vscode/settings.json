@@ -61,6 +61,7 @@
         "sstream": "cpp",
         "stop_token": "cpp",
         "thread": "cpp",
-        "climits": "cpp"
+        "climits": "cpp",
+        "qapplication": "cpp"
     }
 }

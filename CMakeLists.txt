@@ -5,7 +5,13 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # Include project headers
-include_directories(${CMAKE_SOURCE_DIR}/includes)
+include_directories(${CMAKE_SOURCE_DIR}/includes
+                    ${CMAKE_SOURCE_DIR}/gui/includes)
+find_package(Qt6 REQUIRED COMPONENTS Core Widgets Multimedia)
+
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTORCC ON)
 
 # Source files
 set(SOURCES
@@ -21,9 +27,15 @@ set(SOURCES
     src/core/ParametricEqualizer.cpp
     src/modules/ToneControl.cpp
     src/test/TestObject.cpp
+    gui/src/MainWindow.cpp
+
+    #Qt
+    gui/includes/MainWindow.hpp
 )
 
 add_executable(huta_dsp ${SOURCES})
+# Link Qt
+target_link_libraries(huta_dsp PRIVATE Qt6::Core Qt6::Widgets Qt6::Multimedia)
 
 # ------------------------------------------
 # Cross-platform handling for libsndfile
