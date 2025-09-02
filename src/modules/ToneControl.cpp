@@ -59,13 +59,10 @@ int Module::ToneControl::process(int sample) {
     return outputSample;
 }
 
-std::vector<int> Module::ToneControl::process(std::vector<double> &inputSignal) {
-    std::vector<int> outputSignal;
-    for(double sample : inputSignal) {
+void Module::ToneControl::process(std::vector<double> &inputSignal) {
+    for(double &sample : inputSignal) {
         int q_sample = DSP_MATH::float_to_q16_15(sample);
-        outputSignal.push_back(process(q_sample));
+        sample = process(q_sample);
     }
-
-    return outputSignal;
 }
 

@@ -13,6 +13,7 @@
 #include "../core/BiquadFilter.hpp"
 #include "../core/PeakFilter.hpp"
 #include "../core/ShelvingFilter.hpp"
+#include "../interface/IDSPBlock.hpp"
 #include <iostream>
 #include <memory>
 #include <vector>
@@ -27,7 +28,7 @@ typedef struct {
 } ToneControlParams;
 
 namespace Module {
-class ToneControl {
+class ToneControl : public IDSPBlock {
 public:
     ToneControl(int fs) {
         m_fs = fs;
@@ -41,7 +42,7 @@ public:
     void setMidFilter(int fc, double G, double Q);
     void setShelfSlope(int typeShelf, float shelfSlope);
     void configuration(const ToneControlParams *bass, const ToneControlParams *mid, const ToneControlParams *treble);
-    std::vector<int> process(std::vector<double> &inputSignal);
+    void process(std::vector<double> &inputSignal) override;
 
 private:
     int m_fs;

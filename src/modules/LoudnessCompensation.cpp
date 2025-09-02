@@ -47,7 +47,7 @@ double Modules::LoudnessCompensation::process(double sample)
     return outputSample;
 }
 
-void Modules::LoudnessCompensation::applyLoudnessCompensation(std::vector<float> &audioBuffer)
+void Modules::LoudnessCompensation::process(std::vector<double> &audioBuffer)
 {
     for(size_t i = 0; i < audioBuffer.size(); i++) {
         int q_sample = DSP_MATH::float_to_q16_15(audioBuffer[i]);

@@ -2,6 +2,7 @@
 #define _LOUDNESS_COMPENSATION_H_ 
 
 #include "../core/BiquadFilter.hpp"
+#include "../interface/IDSPBlock.hpp"
 #include <vector>
 #include <memory>
 #include <algorithm>
@@ -21,7 +22,7 @@ struct GainFactor {
 
 namespace Modules {
 
-class LoudnessCompensation {
+class LoudnessCompensation : public IDSPBlock {
 public:
     LoudnessCompensation(int fs) {
         m_bassShelf = std::make_unique<Filter::BiquadFilter>(fs);
@@ -40,7 +41,7 @@ public:
 
     void getGainFactor(int currentVolume);
     void configFilter(double slope, double Q);
-    void applyLoudnessCompensation(std::vector<float>& audioBuffer);
+    void process(std::vector<float>& audioBuffer) override;
 private:
     std::unique_ptr<Filter::BiquadFilter> m_bassShelf;
     std::unique_ptr<Filter::BiquadFilter> m_trebleShelf;
