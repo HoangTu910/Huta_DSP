@@ -27,7 +27,16 @@ typedef struct {
     double gain;
 } ToneControlParams;
 
-namespace Module {
+/* Tone control config */
+struct TonePreset {
+    ToneControlParams bass;
+    ToneControlParams mid;
+    ToneControlParams treble;
+};
+
+extern TonePreset mediaToneDefault;
+
+namespace Modules {
 class ToneControl : public IDSPBlock {
 public:
     ToneControl(int fs) {

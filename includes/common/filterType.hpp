@@ -23,11 +23,14 @@
 #define HIGH_SHELF 123
 #define LOW_SHELF 321
 
+#define MIXER_SOURCE_INPUT 5
+#define MIXER_SOURCE_OUTPUT 4
+
 const double PI_DOUBLE = 3.14159265358979323846;
 const int SCALE_FACTOR = 2;
 
 /* Some parameter */
-const int SAMP_FREQ = 44100; 
+constexpr int SAMP_FREQ = 44100; 
 const int CUTOFF_FREQ = 200;
 const int CENTER_FREQ = 800;
 const double Q_FACTOR = 0.707;
@@ -40,6 +43,14 @@ const double any = 1.0;
 
 const int BASS_LOUDNESS_COMPENSATION = 150;
 const int TREBLE_LOUDNESS_COMPENSATION = 150;
+
+/* Gain matrix */
+const double GAIN_MATRIX[MIXER_SOURCE_OUTPUT][MIXER_SOURCE_INPUT] = {
+    {0.8, 1.0, 0.6, 1.0, 0.5}, // Front L
+    {0.8, 1.0, 0.6, 1.0, 0.5}, // Front R
+    {0.5, 0.0, 0.3, 1.0, 0.5}, // Rear L
+    {0.5, 0.0, 0.3, 1.0, 0.5}  // Rear R
+};
 
 enum class Type {
     LowPass,

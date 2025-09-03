@@ -8,6 +8,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 include_directories(${CMAKE_SOURCE_DIR}/includes
                     ${CMAKE_SOURCE_DIR}/gui/includes)
 find_package(Qt6 REQUIRED COMPONENTS Core Widgets Multimedia)
+file(COPY ${CMAKE_SOURCE_DIR}/sounds DESTINATION ${CMAKE_BINARY_DIR})
 
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
@@ -25,6 +26,10 @@ set(SOURCES
     src/core/PeakFilter.cpp
     src/core/BiquadFilter.cpp
     src/core/ParametricEqualizer.cpp
+    src/modules/Limiter.cpp
+    src/modules/LoudnessCompensation.cpp
+    src/config/AudioManager.cpp
+    src/pipeline/AudioPipeline.cpp
     src/modules/ToneControl.cpp
     src/test/TestObject.cpp
     gui/src/MainWindow.cpp

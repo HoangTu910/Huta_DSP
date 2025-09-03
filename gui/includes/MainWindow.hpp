@@ -11,6 +11,7 @@
 #include <QVBoxLayout>
 #include <QMediaPlayer>
 #include <QHBoxLayout>
+#include <QCoreApplication>
 #include <memory>
 
 class MainWindow : public QMainWindow

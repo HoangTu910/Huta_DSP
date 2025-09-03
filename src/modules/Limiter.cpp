@@ -1,12 +1,12 @@
 #include "../includes/modules/Limiter.hpp"
 
-void Limiter::process(std::vector<double>& buffer) {
+void Modules::Limiter::process(std::vector<double>& buffer) {
     for (auto& sample : buffer) {
         process(sample);
     }
 }
 
-double Limiter::process(double sample) {
+double Modules::Limiter::process(double sample) {
     /* Peak rectifier */
     const double xPeak = std::abs(sample);
 

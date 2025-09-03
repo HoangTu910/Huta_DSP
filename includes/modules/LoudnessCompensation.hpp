@@ -41,7 +41,7 @@ public:
 
     void getGainFactor(int currentVolume);
     void configFilter(double slope, double Q);
-    void process(std::vector<float>& audioBuffer) override;
+    void process(std::vector<double>& audioBuffer) override;
 private:
     std::unique_ptr<Filter::BiquadFilter> m_bassShelf;
     std::unique_ptr<Filter::BiquadFilter> m_trebleShelf;

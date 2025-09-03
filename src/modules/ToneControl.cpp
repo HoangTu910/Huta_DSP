@@ -1,20 +1,26 @@
 #include "../includes/modules/ToneControl.hpp"
 
-void Module::ToneControl::setBassFilter(int fc, double factor) {
+TonePreset mediaToneDefault = {
+    {100, 0.0, 3.0},     // Bass 100Hz, +3dB
+    {1000, 1.0, 2.0},    // Mid 1kHz, Q=1, +2dB
+    {8000, 0.0, 4.0}    // Treble 10kHz, +4dB
+};
+
+void Modules::ToneControl::setBassFilter(int fc, double factor) {
     m_bassFilter->setParameters(Type::LowShelf, fc, 0, factor);
 }
 
-void Module::ToneControl::setTrebleFilter(int fc, double factor)
+void Modules::ToneControl::setTrebleFilter(int fc, double factor)
 {
     m_trebleFilter->setParameters(Type::HighShelf, fc, 0, factor);
 }
 
-void Module::ToneControl::setMidFilter(int fc, double G, double Q)
+void Modules::ToneControl::setMidFilter(int fc, double G, double Q)
 {
     m_midFilter->setParameters(Type::Peaking, fc, Q, G);
 }
 
-void Module::ToneControl::setShelfSlope(int typeShelf, float shelfSlope)
+void Modules::ToneControl::setShelfSlope(int typeShelf, float shelfSlope)
 {
     if(typeShelf == HIGH_SHELF) {
         m_trebleFilter->setShelfSlope(shelfSlope);
@@ -29,7 +35,7 @@ void Module::ToneControl::setShelfSlope(int typeShelf, float shelfSlope)
     }
 }
 
-void Module::ToneControl::configuration(const ToneControlParams *bass, const ToneControlParams *mid, const ToneControlParams *treble)
+void Modules::ToneControl::configuration(const ToneControlParams *bass, const ToneControlParams *mid, const ToneControlParams *treble)
 {
     /*
      * Gain will be set to 0 (flat) when init configuration 
@@ -39,7 +45,7 @@ void Module::ToneControl::configuration(const ToneControlParams *bass, const Ton
     m_trebleFilter->setParameters(Type::HighShelf, treble->freq, treble->Q, N0_F);
 }
 
-int Module::ToneControl::process(int sample) {
+int Modules::ToneControl::process(int sample) {
     int outputLowShelf = m_bassFilter->process(sample);
     int outputMidPeak = m_midFilter->process(outputLowShelf);
     int outputSample = m_trebleFilter->process(outputMidPeak);
@@ -59,7 +65,7 @@ int Module::ToneControl::process(int sample) {
     return outputSample;
 }
 
-void Module::ToneControl::process(std::vector<double> &inputSignal) {
+void Modules::ToneControl::process(std::vector<double> &inputSignal) {
     for(double &sample : inputSignal) {
         int q_sample = DSP_MATH::float_to_q16_15(sample);
         sample = process(q_sample);

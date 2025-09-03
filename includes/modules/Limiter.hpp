@@ -2,7 +2,14 @@
 #define _LIMITER_HPP_
 
 #include "../interface/IDSPBlock.hpp"
+#include <cmath>
 
+#define LIMITER_AT 0.0001f
+#define LIMITER_RT 0.0001f
+#define LIMITER_TH 3 // 3dB
+#define LIMITER_DELAY_SAMPLES 5
+
+namespace Modules {
 class Limiter : public IDSPBlock {
 public:
     Limiter(double thresholdDb, double attackTimeMs, double releaseTimeMs, int delaySamples) 
@@ -30,6 +37,6 @@ private:
     std::vector<double> m_buffer;
     int m_delayIndex;
 };
-
+}
 
 #endif

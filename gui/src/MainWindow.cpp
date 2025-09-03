@@ -95,23 +95,23 @@ void MainWindow::playSound(const QString &filePath) {
 
 // ==== Slot implementations ====
 void MainWindow::playMedia() {
-    playSound("../../sounds/media.mp3");
+    playSound("../../sounds/media.wav");
 }
 
 void MainWindow::playVoice() {
-    playSound("../../sounds/voicephone.mp3");
+    playSound("../../sounds/voicephone.wav");
 }
 
 void MainWindow::playAssist() {
-    playSound("../../sounds/assistance.mp3");
+    playSound("../../sounds/assistance.wav");
 }
 
 void MainWindow::playAlarm() {
-    playSound("../../sounds/alarm.mp3");
+    playSound("../../sounds/alarm.wav");
 }
 
 void MainWindow::playNotif() {
-    playSound("../../sounds/notif.mp3");
+    playSound("../../sounds/notif.wav");
 }
 
 void MainWindow::stopPlayback() {
