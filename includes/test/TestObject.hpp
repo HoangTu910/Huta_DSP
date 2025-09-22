@@ -9,6 +9,7 @@
 #include "../includes/test/Signal.hpp"
 #include "../includes/common/filterType.hpp"
 #include "../includes/core/ParametricEqualizer.hpp"
+#include "../includes/modules/Limiter.hpp"
 #include <sndfile.h>
 #include <memory>
 

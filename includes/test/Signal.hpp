@@ -87,6 +87,23 @@ public:
         std::cout << "Sound file done .wav\n";
     }
 
+    template<typename TT>
+    void createSoundNotScaleSignal(std::vector<TT> &signal, const std::string &filename)
+    {
+        SF_INFO sfInfo;
+        sfInfo.samplerate = m_sampFreq;
+        sfInfo.channels = 1; //mono
+        sfInfo.format = SF_FORMAT_WAV | SF_FORMAT_PCM_16;
+        SNDFILE* outFile = sf_open(filename.c_str(), SFM_WRITE, &sfInfo);
+        if (!outFile) {
+            std::cerr << "Error create .wav\n";
+            return;
+        }
+        sf_writef_double(outFile, signal.data(), signal.size() / sfInfo.channels);
+        sf_close(outFile);
+        std::cout << "Sound file done .wav\n";
+    }
+
 private:
     int m_sampFreq;
     int m_duration;

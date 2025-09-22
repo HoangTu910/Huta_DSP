@@ -1,26 +1,56 @@
 #include "../includes/modules/Limiter.hpp"
 
 void Modules::Limiter::process(std::vector<double>& buffer) {
+    hu_alert("Modules::Limiter processing");
     for (auto& sample : buffer) {
-        process(sample);
+        // int q_sample = DSP_MATH::float_to_q16_15(sample);
+        sample = process(sample);
     }
 }
 
+int cntLim = 0;
+
 double Modules::Limiter::process(double sample) {
+    double k = 0.0;
+    double thresholdLinear = std::pow(10.0, m_thresholdDb / 20.0);
+
     /* Peak rectifier */
     const double xPeak = std::abs(sample);
+    bool isAttack = (xPeak > m_envelope);
 
     /* Envelope follower with Attack/Release times */
-    const double coeffAttack = (xPeak > m_envelope) ? m_attackTimeMs : m_releaseTimeMs;
-    m_envelope = (1.0 - coeffAttack) * m_envelope + coeffAttack * xPeak;
+    if(isAttack) {
+        m_envelope = (1.0 - m_attackCoefficient) * m_envelope + m_attackCoefficient * xPeak;
+        k = m_attackCoefficient; 
+    }
+    else {
+        m_envelope = (1.0 - m_releaseCoefficient) * m_envelope + m_releaseCoefficient * xPeak;
+        k = m_releaseCoefficient;
+    }
 
-    /* Gain target */
     constexpr double eps = 1e-30;
-    const double denom = (m_envelope > eps) ? m_envelope : eps;
-    const double f = std::min(1.0, m_thresholdDb / denom);
-
+    
+    double f = std::min(1.0, (thresholdLinear/(m_envelope + 0.0)));
+    if(f < m_gain) {
+        k = m_attackCoefficient;
+    }
+    else {
+        k = m_releaseCoefficient;
+    }
     /* Smoothing */
-    m_gain = (1.0 - coeffAttack) * m_gain + coeffAttack * f;
+    m_gain = (1.0 - k) * m_gain + k * f;
+
+    if(cntLim > 50000 && cntLim < 50006) {
+        hu_debug(sample);
+        hu_debug(m_envelope);
+        hu_debug(m_gain);
+        hu_debug(k);
+        hu_debug(f);
+        hu_debug(thresholdLinear);
+        hu_debug(m_delaySamples);
+    }
+    cntLim++;
+
 
     /* Delay */
     double delayed = (m_delaySamples > 0) ? m_buffer[m_delayIndex] : sample;

@@ -13,7 +13,7 @@ files = [
     # ("outputSignal_4.txt", "Output Signal 4"),
     ("outputSignal_5.txt", "Output Signal 5"),
     ("outputSignal_7.txt", "Output Signal 7"),
-    ("outputSignal_8.txt", "Output Signal 8"),
+    ("outputSignal_9.txt", "Output Signal 9"),
 ]
 
 plt.figure(figsize=(14, 10))

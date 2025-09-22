@@ -29,7 +29,7 @@ void Test::TestObject::runAllCoreProcessing()
 
     /* We can hear the sound of the signal by using createSoundSignal() method
        Remember to change the namespace from TestFiles to SoundTestFiles    */
-    signal->createSoundSignal(signal->t_outputSignal[1], SoundTestFiles::Output1);
+    // signal->createSoundSignal(signal->t_outputSignal[1], SoundTestFiles::Output1);
 
     /* SVF testing */
     unique_ptr<Filter::StateVariableFilter> svf(new Filter::StateVariableFilter(SAMP_FREQ));
@@ -83,4 +83,12 @@ void Test::TestObject::runAllCoreProcessing()
     signal->t_outputSignal[8] = parametricEqualizer->process(signal->t_inputSignal); 
     signal->writeSignal(signal->t_outputSignal[8], TestFiles::Output8);
     signal->createSoundSignal(signal->t_outputSignal[8], SoundTestFiles::Output8);
+
+    /* Limiter Testing */
+    unique_ptr<Modules::Limiter> limiter(new Modules::Limiter(-10, 2, 100, 10));
+    limiter->process(signal->t_inputSignal);
+    signal->writeSignal(signal->t_inputSignal, TestFiles::Output9);
+
+    /* Warning, using NOT scale might be damage your speaker due to un-covert Q-format - check output file before create sound */
+    signal->createSoundNotScaleSignal(signal->t_inputSignal, SoundTestFiles::Output9);
 }
