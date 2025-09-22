@@ -3,6 +3,7 @@
 void Modules::Limiter::process(std::vector<double>& buffer) {
     hu_alert("Modules::Limiter processing");
     for (auto& sample : buffer) {
+        // TODO: Need to process in Q-format
         // int q_sample = DSP_MATH::float_to_q16_15(sample);
         sample = process(sample);
     }
@@ -27,9 +28,8 @@ double Modules::Limiter::process(double sample) {
         m_envelope = (1.0 - m_releaseCoefficient) * m_envelope + m_releaseCoefficient * xPeak;
         k = m_releaseCoefficient;
     }
-
-    constexpr double eps = 1e-30;
     
+    /* AT/RT */
     double f = std::min(1.0, (thresholdLinear/(m_envelope + 0.0)));
     if(f < m_gain) {
         k = m_attackCoefficient;
@@ -37,8 +37,10 @@ double Modules::Limiter::process(double sample) {
     else {
         k = m_releaseCoefficient;
     }
-    /* Smoothing */
+    /* Smoothing filter */
     m_gain = (1.0 - k) * m_gain + k * f;
+
+    /* Explanation: Both peak measurement and smoothing filter using the same AT/RT coefficient */
 
     if(cntLim > 50000 && cntLim < 50006) {
         hu_debug(sample);
