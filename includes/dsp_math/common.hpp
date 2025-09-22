@@ -26,4 +26,9 @@
 
 #define COMMON_Q_FACTOR 0.7071067811865476f
 
+enum FaderType {
+    Linear,
+    Exponential
+};
+
 #endif

@@ -30,7 +30,7 @@ const double PI_DOUBLE = 3.14159265358979323846;
 const int SCALE_FACTOR = 2;
 
 /* Some parameter */
-constexpr int SAMP_FREQ = 44100; 
+constexpr int SAMP_FREQ = 48000; 
 const int CUTOFF_FREQ = 200;
 const int CENTER_FREQ = 800;
 const double Q_FACTOR = 0.707;

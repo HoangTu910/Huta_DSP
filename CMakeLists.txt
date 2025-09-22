@@ -27,6 +27,7 @@ set(SOURCES
     src/core/BiquadFilter.cpp
     src/core/ParametricEqualizer.cpp
     src/modules/Limiter.cpp
+    src/modules/Fader.cpp
     src/modules/LoudnessCompensation.cpp
     src/config/AudioManager.cpp
     src/pipeline/AudioPipeline.cpp
