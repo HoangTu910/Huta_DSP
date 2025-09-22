@@ -1,6 +1,7 @@
 #ifndef MAINWINDOW_HPP
 #define MAINWINDOW_HPP
 
+#ifdef GUI
 #include <QMainWindow>
 #include <QSlider>
 #include <QDial>
@@ -47,5 +48,6 @@ private:
 
     void playSound(const QString &filePath);
 };
+#endif
 
 #endif

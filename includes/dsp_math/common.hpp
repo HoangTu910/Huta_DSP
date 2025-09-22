@@ -28,7 +28,8 @@
 
 enum FaderType {
     Linear,
-    Exponential
+    Exponential,
+    Hybrid
 };
 
 #endif

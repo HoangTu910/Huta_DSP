@@ -85,10 +85,21 @@ void Test::TestObject::runAllCoreProcessing()
     signal->createSoundSignal(signal->t_outputSignal[8], SoundTestFiles::Output8);
 
     /* Limiter Testing */
+    std::vector<double> limiterTestBuffer = signal->t_inputSignal;
     unique_ptr<Modules::Limiter> limiter(new Modules::Limiter(-10, 2, 100, 10));
-    limiter->process(signal->t_inputSignal);
-    signal->writeSignal(signal->t_inputSignal, TestFiles::Output9);
+    limiter->process(limiterTestBuffer);
+    signal->writeSignal(limiterTestBuffer, TestFiles::Output9);
 
     /* Warning, using NOT scale might be damage your speaker due to un-covert Q-format - check output file before create sound */
-    signal->createSoundNotScaleSignal(signal->t_inputSignal, SoundTestFiles::Output9);
+    signal->createSoundNotScaleSignal(limiterTestBuffer, SoundTestFiles::Output9);
+
+    /* Fader Testing */
+    std::vector<double> faderTestBuffer = signal->t_inputSignal;
+    unique_ptr<Modules::Fader> fader(new Modules::Fader(800 /* Linear slope (time from -80dB to target in ms)*/, 
+                                                        200 /* Exponential slope (dB/s) */, 
+                                                        FaderType::Hybrid /* Fader type */, 
+                                                        1.2 /* Target gain */));
+    fader->process(faderTestBuffer);
+    signal->writeSignal(faderTestBuffer, TestFiles::Output10);
+    signal->createSoundNotScaleSignal(faderTestBuffer, SoundTestFiles::Output10);
 }

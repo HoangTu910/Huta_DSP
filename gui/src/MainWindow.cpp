@@ -1,4 +1,5 @@
 #include "../includes/MainWindow.hpp"
+#ifdef GUI
 #include <QVBoxLayout>
 #include <QWidget>
 #include <QGroupBox>
@@ -120,3 +121,4 @@ void MainWindow::stopPlayback() {
         player->deleteLater();
     }
 }
+#endif
