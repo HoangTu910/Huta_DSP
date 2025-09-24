@@ -32,6 +32,19 @@ int main(int argc, char *argv[]) {
         |=====(Frame 1)=====|======(Frame 2)======|==============|
         Tất cả đều áp dụng trên một file input. Có nghĩa là truyền tham chiếu buffer đó vào 
         hàm process hoặc tạo một buffer copy rồi xử lý buffer copy đó, sau đó cho ra output.
+        ---------------------------------------
+        Source change
+        Volume change
+        Mute / De-mute
+        Level Management
+        Ramps
+        Tone controllers
+        Equalizers
+        Staging
+        Anti-Clipping (Limiters)
+        Companders
+        Mixing
+        ---------------------------------------
     */
     unique_ptr<Test::TestObject> pTest(new Test::TestObject());
     pTest->runAllCoreProcessing();
